@@ -1,0 +1,8 @@
+\fancychapter{Conclusion}
+\label{chap:Conclusion}
+
+
+This dissertation presented a novel approach to enhance the scalability of the Maximum Variance Unfolding (MVU) algorithm, a well-known technique for nonlinear dimensionality reduction. The proposed method, termed MVU-DM (Maximum Variance Unfolding with Disconnected Manifolds), addresses the computational challenges associated with MVU by decomposing the dataset into smaller, manageable components based on their connectivity in the original space. Each component is then independently embedded using MVU, and a global embedding is constructed by aligning these local embeddings through a set of representative points. This approach not only reduces the computational burden but also preserves the local structure of the data, which is crucial for effective dimensionality reduction.
+
+The experimental results demonstrated that MVU-DM achieves comparable performance to the standard MVU algorithm in terms of classification accuracy, trustworthiness, and continuity, while significantly reducing the computational time required for embedding. The method was tested on both artificial and natural datasets, showcasing its versatility and effectiveness across different types of data. Notably, MVU-DM outperformed other traditional dimensionality reduction techniques such as Isomap, LLE, HLLE, LE, LTSA, T-SNE, and K-PCA in several scenarios, particularly in preserving local structures and achieving lower classification errors.
+

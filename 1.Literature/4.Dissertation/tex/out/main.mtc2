@@ -1,0 +1,24 @@
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {2.1}Convex Optimization}{\reset@font\mtcSfont 5}{section.2.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.1.1}Convex Sets}{\reset@font\mtcSSfont 5}{subsection.2.1.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.1.2}Convex Functions}{\reset@font\mtcSSfont 6}{subsection.2.1.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.1.3}Optimization Problem}{\reset@font\mtcSSfont 6}{subsection.2.1.3}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {2.2}Dimensionality Reduction}{\reset@font\mtcSfont 7}{section.2.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.2.1}Linear Methods}{\reset@font\mtcSSfont 7}{subsection.2.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.1.A}Principal Component Analysis}{\reset@font\mtcSSSfont 7}{subsubsection.2.2.1.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.1.B}Multidimensional Scaling}{\reset@font\mtcSSSfont 9}{subsubsection.2.2.1.2}}
+{\reset@font\mtcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {A~--}Observations}{\reset@font\mtcPfont 10}{paragraph.2.2.1.2.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.2.2}Non-Linear Methods}{\reset@font\mtcSSfont 10}{subsection.2.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.A}Isometric Mapping (Isomap)}{\reset@font\mtcSSSfont 10}{subsubsection.2.2.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.B}Locally Linear Embedding (LLE)}{\reset@font\mtcSSSfont 11}{subsubsection.2.2.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.C}Laplacian Eigenmaps (LE)}{\reset@font\mtcSSSfont 12}{subsubsection.2.2.2.3}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.D}Hessian Locally Linear Embedding (HLLE)}{\reset@font\mtcSSSfont 13}{subsubsection.2.2.2.4}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.E}Local Tangent Space Analysis (LTSA)}{\reset@font\mtcSSSfont 13}{subsubsection.2.2.2.5}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.F}t-Distributed Stochastic Neighbor Embedding (t-SNE)}{\reset@font\mtcSSSfont 14}{subsubsection.2.2.2.6}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.G}Kernel PCA (K-PCA)}{\reset@font\mtcSSSfont 15}{subsubsection.2.2.2.7}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2.H}Maximum Variance Unfolding (MVU)}{\reset@font\mtcSSSfont 16}{subsubsection.2.2.2.8}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {2.3}Related Work}{\reset@font\mtcSfont 17}{section.2.3}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.1}Out-of-sample Extension}{\reset@font\mtcSSfont 17}{subsection.2.3.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.3.1.A}Nystrom Method}{\reset@font\mtcSSSfont 17}{subsubsection.2.3.1.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.3.1.B}Landmark Extension}{\reset@font\mtcSSSfont 18}{subsubsection.2.3.1.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.2}Enhanced Neighbourhood Graph}{\reset@font\mtcSSfont 20}{subsection.2.3.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3.3}Colored Maximum Variance Unfolding (C-MVU)}{\reset@font\mtcSSfont 21}{subsection.2.3.3}}

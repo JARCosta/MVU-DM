@@ -1,0 +1,83 @@
+\fancychapter{Introduction}
+\label{chap:Introduction}
+
+\section{Context and Motivation}
+
+In an era where data is starting to get collected from any conceivable source, high-dimensional datasets have become ubiquitous across diverse domains. While the abundance of features in these datasets can provide rich information, it also presents the appearance of the "curse of dimensionality". With the increased number of variables, data points become increasingly sparse, distances lose their discriminative power, and computational complexity grows, making these studies ineffective or computationally prohibitive.
+
+%However, a fundamental insight from manifold learning theory suggests that high-dimensional data often exhibit intrinsic structure—they typically lie on or near lower-dimensional manifolds embedded within the high-dimensional ambient space \cite{nonlinear}. This manifold hypothesis has profound implications: if we can discover and exploit this underlying structure, we can achieve more efficient representations, improved visualization, better generalization in learning tasks, and reduced computational requirements.
+
+Dimensionality reduction techniques aim to find lower-dimensional representations while preserving the structure of the original data. Linear methods such as \ac{PCA} \cite{pca} and \ac{MDS} \cite{mds} have been widely adopted due to their simplicity and theoretical foundations. However, these methods assume that the data lies on a linear subspace, an assumption that is not frequently respected in real-world examples, where data exhibit complex nonlinear relationships.
+
+To address these limitations, nonlinear dimensionality reduction methods have emerged as powerful alternatives. Techniques such as \ac{Isomap} \cite{isomap}, \ac{LLE} \cite{lle}, and \ac{LE} \cite{le} attempt to capture the intrinsic geometry of nonlinear manifolds by exploiting local neighborhood relationships. Among these methods, \ac{MVU} \cite{mvu} stands out for its unique approach and theoretical properties.
+
+\section{Maximum Variance Unfolding: Strengths and Limitations}
+
+\ac{MVU}, also known as Semidefinite Embedding (SDE), formulates dimensionality reduction as a semidefinite programming problem. The method seeks to "unfold" a manifold by maximizing the variance (or equivalently, the sum of squared pairwise distances) of the embedded points while preserving local distances defined by a neighborhood graph. This approach offers several distinctive advantages:
+
+\begin{itemize}
+    \item \textbf{Strong theoretical foundation}: \ac{MVU} is based on convex optimization, ensuring global optimality of the solution within its formulation.
+    \item \textbf{Local isometry preservation}: The method maintains distances between neighboring points, preserving the local geometric structure of the manifold.
+    \item \textbf{Parameter robustness}: Unlike some alternatives, \ac{MVU} requires only the specification of the neighborhood size $k$, making it relatively parameter-insensitive.
+    \item \textbf{Metric preservation}: The resulting embeddings maintain meaningful distance relationships, facilitating subsequent analysis and interpretation.
+\end{itemize}
+
+Despite these strengths, \ac{MVU} faces significant practical limitations that restrict its applicability to real-world datasets:
+
+\textbf{Computational Complexity}: The algorithm's computational complexity of $O((nk)^3)$ \cite{cube} makes it prohibitively expensive for large datasets. The semidefinite programming formulation requires solving optimization problems over $n \times n$ matrices, where $n$ is the number of data points, leading to memory requirements that scale quadratically with dataset size.
+
+\textbf{Connectivity Requirements}: \ac{MVU} assumes that the neighborhood graph constructed from the data is connected. This assumption is frequently violated in practice, particularly when:
+\begin{inparaenum}[(i)]
+\item data exhibit natural clustering or multimodal distributions;
+\item sampling is irregular or sparse in certain regions;
+\item noise or outliers create artificial disconnections; or
+\item the intrinsic structure consists of multiple separate manifolds.
+\end{inparaenum}
+
+When the neighborhood graph is disconnected, the resulting semidefinite program becomes ill-conditioned or infeasible, preventing the application of standard \ac{MVU}.
+
+\section{The Challenge of Disjoint Manifolds}
+
+Real-world datasets frequently exhibit disconnected structure for various reasons. In computer vision, images of different object categories may form separate clusters in feature space. In bioinformatics, gene expression data from different cell types or conditions may lie on distinct manifolds. In social networks, different communities may be weakly connected or entirely separated. Traditional approaches to handle such disconnections include:
+
+\begin{itemize}
+    \item \textbf{Preprocessing techniques}: Methods like the \ac{ENG} \cite{eng} attempt to connect disjoint components by adding edges, but this can distort the intrinsic geometry and increase computational complexity.
+    \item \textbf{Separate processing}: Processing each component independently loses global relationships and makes unified analysis difficult.
+    \item \textbf{Alternative methods}: Switching to other dimensionality reduction techniques that can handle disconnections, but potentially losing \ac{MVU}'s desirable properties.
+\end{itemize}
+
+None of these approaches fully address the fundamental challenge: how to leverage \ac{MVU}'s strengths while efficiently handling datasets with multiple disjoint manifolds.
+
+\section{Research Objectives and Contributions}
+
+This thesis addresses the limitations of \ac{MVU} when applied to datasets containing multiple disjoint manifolds. Our primary objective is to develop a method that preserves the theoretical and practical advantages of \ac{MVU} while making it applicable to disconnected datasets and computationally tractable for large-scale problems.
+
+The main contributions of this work are:
+
+\begin{enumerate}
+    \item \textbf{Algorithm Development}: We propose \ac{MVU-DM} (Maximum Variance Unfolding on Disjoint Manifolds), a novel extension that decomposes the dimensionality reduction problem into local and global stages, enabling efficient processing of disconnected datasets.
+
+    \item \textbf{Computational Efficiency}: The proposed method reduces computational complexity from $O(n^3)$ to $\sum_{p=1}^{C} O(n_p^3)$, where $C$ is the number of components and $n_p$ is the size of component $p$. This decomposition enables parallel processing and significantly improves scalability.
+
+    \item \textbf{Global Structure Preservation}: We develop strategies for selecting representative points and establishing inter-component connections that preserve global relationships while maintaining local geometric fidelity.
+
+    \item \textbf{Comprehensive Evaluation}: We provide extensive experimental validation on both artificial and natural datasets, demonstrating superior performance compared to standard \ac{MVU} and other dimensionality reduction methods across multiple evaluation metrics.
+
+    \item \textbf{Practical Implementation}: We present algorithmic details and implementation considerations that make the method practically applicable to real-world scenarios.
+\end{enumerate}
+
+\section{Thesis Organization}
+
+This thesis is organized as follows:
+
+\textbf{Chapter 2} provides a comprehensive literature review covering convex optimization foundations, dimensionality reduction techniques (both linear and nonlinear), and existing approaches for handling disconnected manifolds. We examine the theoretical background of \ac{MVU} and related methods in detail.
+
+\textbf{Chapter 3} discusses related work, focusing on out-of-sample extensions, the Enhanced Neighborhood Graph method, and other approaches for addressing connectivity issues in manifold learning.
+
+\textbf{Chapter 4} presents our proposed \ac{MVU-DM} algorithm, including detailed descriptions of the local and global stages, representative point selection strategies, inter-component connection methods, and computational complexity analysis.
+
+\textbf{Chapter 5} provides comprehensive experimental evaluation, including dataset descriptions, evaluation metrics, comparative results, and analysis of computational performance. We demonstrate the effectiveness of \ac{MVU-DM} across various scenarios and discuss the implications of our findings.
+
+\textbf{Chapter 6} concludes the thesis with a summary of contributions, discussion of limitations, and directions for future research.
+
+This work advances the state-of-the-art in nonlinear dimensionality reduction by making \ac{MVU} applicable to a broader class of real-world problems while maintaining its desirable theoretical properties and improving its computational tractability.

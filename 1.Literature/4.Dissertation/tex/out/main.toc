@@ -1,0 +1,46 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Context and Motivation}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Maximum Variance Unfolding: Strengths and Limitations}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}The Challenge of Disjoint Manifolds}{3}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Research Objectives and Contributions}{3}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Thesis Organization}{4}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Literature Review}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Convex Optimization}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Convex Sets}{5}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Convex Functions}{6}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Optimization Problem}{6}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}Dimensionality Reduction}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Linear Methods}{7}{subsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.1.A}Principal Component Analysis}{7}{subsubsection.2.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.2.1.B}Multidimensional Scaling}{9}{subsubsection.2.2.1.2}%
+\contentsline {paragraph}{\numberline {A~--}Observations}{10}{paragraph.2.2.1.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Non-Linear Methods}{10}{subsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.2.A}Isometric Mapping (Isomap)}{10}{subsubsection.2.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2.B}Locally Linear Embedding (LLE)}{11}{subsubsection.2.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.2.C}Laplacian Eigenmaps (LE)}{12}{subsubsection.2.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.2.D}Hessian Locally Linear Embedding (HLLE)}{13}{subsubsection.2.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.2.E}Local Tangent Space Analysis (LTSA)}{13}{subsubsection.2.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.2.F}t-Distributed Stochastic Neighbor Embedding (t-SNE)}{14}{subsubsection.2.2.2.6}%
+\contentsline {subsubsection}{\numberline {2.2.2.G}Kernel PCA (K-PCA)}{15}{subsubsection.2.2.2.7}%
+\contentsline {subsubsection}{\numberline {2.2.2.H}Maximum Variance Unfolding (MVU)}{16}{subsubsection.2.2.2.8}%
+\contentsline {section}{\numberline {2.3}Related Work}{17}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Out-of-sample Extension}{17}{subsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.1.A}Nystrom Method}{17}{subsubsection.2.3.1.1}%
+\contentsline {subsubsection}{\numberline {2.3.1.B}Landmark Extension}{18}{subsubsection.2.3.1.2}%
+\contentsline {subsection}{\numberline {2.3.2}Enhanced Neighbourhood Graph}{20}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Colored Maximum Variance Unfolding (C-MVU)}{21}{subsection.2.3.3}%
+\contentsline {chapter}{\numberline {3}Maximum Variance Unfolding on Disjoint Manifolds}{23}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Algorithm Description}{24}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Local Stage}{25}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Global Stage}{26}{subsection.3.1.2}%
+\contentsline {chapter}{\numberline {4}Results}{29}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Datasets}{30}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Metrics}{31}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}1-NN Classification Error}{32}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Trustworthiness}{32}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Continuity}{32}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Results and Discussion}{32}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Conclusion}{37}{chapter.5}%
+\contentsline {chapter}{\numberline {A}Appendix}{43}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Convex MVU}{43}{section.A.1}%

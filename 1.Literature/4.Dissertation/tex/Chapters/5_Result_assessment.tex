@@ -1,0 +1,281 @@
+\fancychapter{Results}
+\label{chap:Results}
+
+
+In this chapter, the results of the experiments conducted to evaluate the performance of the proposed MVU-DM algorithm are presented and analyzed. The evaluation is based on several datasets, both artificial and natural, and includes comparisons with other dimensionality reduction techniques.
+
+The methods compared in the experiments include:
+\begin{inparaenum}
+    \item \textbf{\ac{Isomap}} \cite{isomap};
+    \item \textbf{\ac{Isomap}+\ac{ENG}} \cite{isomap, eng};
+    \item \textbf{\ac{LLE}} \cite{lle};
+    \item \textbf{\ac{HLLE}} \cite{hlle};
+    \item \textbf{\ac{LE}} \cite{le};
+    \item \textbf{\ac{LTSA}} \cite{ltsa};
+    \item \textbf{\ac{KPCA}} \cite{kpca};
+    \item \textbf{\ac{MVU}} \cite{mvu}.
+\end{inparaenum}
+
+The results were compared with previous studies: \cite{comparison} \cite{eng}, from which were chosen the most relevant methods for the comparison.
+
+All methods are implemented using the Python \cite{python} library \texttt{scikit-learn} \cite{scikit-learn}. Additionally, the \ac{MVU} also relies on solving an optimization problem, using also the matlab.engine library to interface with MATLAB from Python \cite{matlab.python, python}.
+
+
+\section{Datasets}
+    The evaluation is performed on a variety of datasets, including both artificial and natural datasets. The artificial datasets include:
+    \begin{inparaenum}
+        \item \textbf{\ac{BSC}}: A 2D broken, linear manifold, bent into a 3-dimensional S shape, illustrated in \Cref{fig:bsc};
+        \item \textbf{\ac{SR1}}: Two 2D Swiss Roll manifolds, bent into 3D, and positioned arbitrarily in the same space (see \Cref{fig:sr1});
+        \item \textbf{\ac{SR2}}: Two 2D Swiss Roll manifolds, bent into 3D, and positioned parallel to each other (see \Cref{fig:sr2});
+        \item \textbf{\ac{FM}}: Four 2D half-circle manifolds, positioned in a 3D space (see \Cref{fig:fm}).
+    \end{inparaenum}
+
+    \begin{figure}
+    \centering
+    \subfigure[Broken S-curve]{
+        \includegraphics[width=0.2\textwidth]{Images/3a.broken.s_curve.original.pdf}
+        \label{fig:bsc}
+    }
+    \subfigure[Arbitrary Swiss Rolls]{
+        \includegraphics[width=0.2\textwidth]{Images/3b.parallel.swiss.original.pdf}
+        \label{fig:sr1}
+    }
+    \subfigure[Parallel Swiss Rolls]{
+        \includegraphics[width=0.2\textwidth]{Images/3c.two.swiss.original.pdf}
+        \label{fig:sr2}
+    }
+    \subfigure[Four Moons]{
+        \includegraphics[width=0.2\textwidth]{Images/3d.four.moons.original.pdf}
+        \label{fig:fm}
+    }
+    \caption{Artificial datasets used in the experiments: (a) \ac{BSC}, (b) \ac{SR1}, (c) \ac{SR2}, and (d) \ac{FM}.}
+    \end{figure}
+
+    More precisely, all the artificial datasets consist of 2,000 points, sampled with added Gaussian noise ($\sigma = 0.05$). The \ac{BSC} dataset is built following the equations:
+    \begin{equation}
+        \boldsymbol{X} = \begin{bmatrix}
+            \sin(t) \\
+            h \\
+            \text{sign}(t) \cdot (\cos(t) - 1)
+        \end{bmatrix} + \epsilon,
+    \end{equation}
+    where $t \in [-1.5\pi, 1.5\pi] \setminus \left( [-1.1\pi, -0.9\pi] \cup [-0.1\pi, 0.1\pi] \cup [0.9\pi, 1.1\pi] \right)$, $h \in [0, 2]$, and $\epsilon$ is Gaussian noise. The \ac{SR1} and \ac{SR2} datasets are built from the base definition of the Swiss roll:
+    \begin{equation}
+        \boldsymbol{X}_\text{raw} = \begin{bmatrix}
+            t \cdot \cos(t) \\
+            h \\
+            t \cdot \sin(t)
+        \end{bmatrix} + \epsilon,
+    \end{equation}
+    where $t \in [1.5\pi, 3\pi]$, $h \in [0, 30]$, and $\epsilon$ is Gaussian noise.
+    
+    For the \ac{SR1} dataset, two rolls are created, being subject to the following transformations:
+    \begin{align}
+        \boldsymbol{X}_1 & = \begin{bmatrix}
+            \cos(-\pi/4) & -\sin(-\pi/4) & 0 \\
+            \sin(-\pi/4) & \cos(-\pi/4) & 0 \\
+            0 & 0 & 1
+        \end{bmatrix} \boldsymbol{X}_\text{raw} + \begin{bmatrix}
+            20 \\
+            20 \\
+            30
+        \end{bmatrix} \\
+        \boldsymbol{X}_2 & = \boldsymbol{X}_\text{raw} + \begin{bmatrix}
+            0 \\
+            -20 \\
+            0
+        \end{bmatrix}.
+    \end{align}
+    
+    For the \ac{SR2} dataset, one of the datasets is left unchanged, while the other is translated:
+    \begin{equation}
+        \boldsymbol{X}_2 = \boldsymbol{X}_\text{raw} + \begin{bmatrix}
+            0 \\
+            -20 \\
+            0
+        \end{bmatrix}.
+    \end{equation}
+
+    A single pair of moons is generated using the equations:
+    \begin{equation}
+        \boldsymbol{X}_\text{raw}= \begin{bmatrix}
+            \sin(t) + \epsilon\\
+            \cos(t) + \epsilon
+        \end{bmatrix}  \cup \begin{bmatrix}
+            \frac{1 - \sin(t)}{4} + \epsilon\\
+            \frac{\cos(t)}{4} + \epsilon
+        \end{bmatrix},
+    \end{equation}
+    where $t \in [0, \pi]$ and $\epsilon$ is Gaussian noise. The \ac{FM} dataset is then created:
+
+    \begin{equation}
+        \boldsymbol{X} = \begin{bmatrix}
+            \boldsymbol{X}_\text{raw} & \boldsymbol{0} \\
+            \boldsymbol{X}_\text{raw} & \boldsymbol{1}
+        \end{bmatrix},
+    \end{equation}
+    where $\boldsymbol{0}$ and $\boldsymbol{1}$ are vectors of zeros and ones, respectively, with the same number of rows as $\boldsymbol{X}_\text{raw}$. The final dataset consists of four half-moons positioned in a 3D space.
+
+
+    The natural datasets include:
+    \begin{inparaenum}
+        \item \textbf{\ac{COIL20}}: A dataset of 1,440 grayscale images (128x128 pixels) of 20 different objects, each captured from various angles;
+        \item \textbf{\ac{ORL}}: A dataset of 400 grayscale images (112x92 pixels) of 40 different individuals' faces;
+        \item \textbf{\ac{MIT-CBCL}}: A dataset of 2,059 grayscale images (64x64 pixels) of faces, with variations in lighting and facial expressions;
+        \item \textbf{Olivetti}: directly extracted from the scikit-learn library, this dataset imports the original data from the ORL dataset, but adds a data treatment layer (e.g., each image is resized to 64x64 pixels, removing the background and relying more on each face's characteristics).
+    \end{inparaenum}
+
+
+\section{Metrics}
+    To assess the quality of the embeddings produced by MVU-DM and other algorithms, three metrics are employed: 1-NN classification error, Trustworthiness, and Continuity.
+
+    \subsection{1-NN Classification Error}
+        The 1-NN classification error measures the accuracy of the embeddings by evaluating how well they can be used for nearest neighbor classification. A lower error rate indicates better preservation of the original data structure.
+
+        Given the embeddings $\boldsymbol{Y} \in \mathbb{R}^{n \times d}$ and the original labels $\boldsymbol{L} \in \mathbb{R}^{n}$, the 1-NN classification error is computed as follows:
+        \begin{equation}
+            \text{1-NN Error} = \frac{1}{n} \sum_{i=1}^{n} \mathbb{I}(L_i \neq L_{\text{NN}(i)}),
+        \end{equation}
+        where $\mathbb{I}$ is the indicator function, and $\text{NN}(i)$ is the index of the nearest neighbor of point $i$ in the embedding space.
+
+    \subsection{Trustworthiness}
+        Trustworthiness measures how well the local structure of the original data is preserved in the embedding. This metric penalizes points that are close in the embedding but were far apart in the original space. The trustworthiness $T(k)$ for a given neighborhood size $k$ is defined as:
+        \begin{equation}
+            T(k) = 1 - \frac{2}{nk(2n - 3k - 1)} \sum_{i=1}^{n} \sum_{j \in U_k(i)} (r(i,j) - k),
+        \end{equation}
+        where $U_k(i)$ is the set of $k$ nearest neighbors of point $i$ in the original space, but no longer in the embedding; $r(i,j)$ is the rank of $j$ in the neighborhood of point $i$ in the embedding space, this rank is the position that $j$ is in the sorted list of closest points to $i$.
+
+    \subsection{Continuity}
+        Analogously, the continuity penalizes points that were close in the original space but are far apart in the embedding. The continuity $C(k)$ for a given neighborhood size $k$ is defined as:
+        \begin{equation}
+            C(k) = 1 - \frac{2}{nk(2n - 3k - 1)} \sum_{i=1}^{n} \sum_{j \in V_k(i)} (\hat{r}(i,j) - k),
+        \end{equation}
+        where $V_k(i)$ is the set of $k$ nearest neighbors of point $i$ in the embedding space, but no longer in the original space; $\hat{r}(i,j)$ is the rank of $j$ in the neighborhood of point $i$ in the original space.
+
+    \section{Results and Discussion}
+        In this section, we present the results of our experiments and discuss the implications of these findings.
+
+        \begin{table}[t]
+        \caption{1-NN results (Smaller values are better)}
+        \label{tab:1NN}
+        \begin{center}
+        \begin{tabular}{|l|c|c|c|c||c|c|c|c|}
+        \hline
+        \multicolumn{1}{|c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c|}{Natural Datasets} \\
+                            & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\
+        \hline
+        Isomap            & 6.50\% & 15.30\% & 9.15\% & \textbf{0.00\%} & 5.83\% & 11.25\% & 1.60\% & 18.25\% \\
+        Isomap+ENG            & 13.10\% & 15.15\% & 8.70\% & 4.95\% & 7.36\% & 11.75\% & 1.65\% & 18.25\% \\
+        LLE            & \textbf{4.15\%} & 26.75\% & 26.45\% & \textbf{0.00\%} & 7.43\% & 9.00\% & 1.70\% & 14.75\% \\
+        HLLE            & 5.20\% & \textbf{7.55\%} & 8.05\% & 0.10\% & 7.29\% & 25.75\% & 2.43\% & 20.50\% \\
+        LE            & 5.05\% & 32.15\% & 32.25\% & 1.05\% & 10.35\% & 13.25\% & 1.99\% & 31.00\% \\
+        LTSA            & 9.20\% & 11.90\% & \textbf{7.55\%} & 0.15\% & 7.01\% & 25.75\% & 2.38\% & 37.25\% \\
+        T-SNE            & 48.40\% & 49.10\% & 49.10\% & 51.15\% & 93.33\% & 98.00\% & 91.50\% & 98.00\% \\
+        K-PCA            & 50.45\% & 26.75\% & 16.85\% & \textbf{0.00\%} & 5.83\% & \textbf{4.00\%} & \textbf{1.41\%} & \textbf{13.25\%} \\
+        \hline
+        MVU            & 6.70\% & 13.35\% & 13.10\% & \textbf{0.00\%} & 5.69\% & 10.75\% & 1.89\% & 14.50\% \\
+        MVU+ENG            & 5.70\% & 10.60\% & 13.30\% & 17.55\% & 5.00\% & 6.25\% & 1.99\% & 14.50\% \\
+        MVU-DM            & 4.85\% & 9.20\% & 9.75\% & \textbf{0.00\%} & \textbf{4.38\%} & 6.25\% & 1.94\% & 14.50\% \\
+        \hline
+        \end{tabular}
+        \end{center}
+        \end{table}
+
+        \begin{table}[t]
+        \caption{Trustworthiness results (Larger values are better)}
+        \label{tab:trustworthiness}
+        \begin{center}
+        \begin{tabular}{|l|c|c|c|c||c|c|c|c|}
+        \hline
+        \multicolumn{1}{|c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c|}{Natural Datasets} \\
+                            & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\
+        \hline
+        Isomap            & 99.18\% & 98.05\% & 99.76\% & 99.10\% & 99.09\% & 98.69\% & 99.67\% & 97.16\% \\
+        Isomap+ENG            & 98.01\% & 98.12\% & 99.93\% & 97.27\% & 98.26\% & 98.46\% & 99.42\% & 97.16\% \\
+        LLE            & \textbf{99.53\%} & 94.81\% & 94.92\% & 99.17\% & 97.99\% & 95.86\% & 99.06\% & 91.16\% \\
+        HLLE            & 98.85\% & 99.81\% & 99.95\% & 98.68\% & 97.91\% & 90.73\% & 99.06\% & 88.92\% \\
+        LE            & 98.94\% & 93.76\% & 93.69\% & 99.72\% & 98.56\% & 98.20\% & 99.73\% & 94.03\% \\
+        LTSA            & 97.58\% & 99.41\% & \textbf{99.96\%} & 98.72\% & 96.98\% & 90.73\% & 99.20\% & 88.52\% \\
+        T-SNE            & 50.10\% & 50.20\% & 50.10\% & 50.11\% & 50.70\% & 50.80\% & 50.40\% & 51.20\% \\
+        K-PCA            & 92.90\% & 92.19\% & 89.41\% & \textbf{100.00\%} & \textbf{99.43\%} & \textbf{99.37\%} & \textbf{99.90\%} & \textbf{98.45\%} \\
+        \hline
+        MVU            & 97.99\% & 98.44\% & 97.32\% & 98.28\% & 97.86\% & 97.54\% & 99.33\% & 97.03\% \\
+        MVU+ENG            & 98.30\% & 98.30\% & 98.50\% & 93.30\% & 97.90\% & 98.10\% & 99.32\% & 97.03\% \\
+        MVU-DM            & 99.50\% & \textbf{99.90\%} & 99.70\% & 99.05\% & 99.10\% & 98.10\% & 99.10\% & 97.03\% \\
+        \hline
+        \end{tabular}
+        \end{center}
+        \end{table}
+
+        \begin{table}[t]
+        \caption{Continuity results (Larger values are better)}
+        \label{tab:continuity}
+        \begin{center}
+        \begin{tabular}{|l|c|c|c|c||c|c|c|c|}
+        \hline
+        \multicolumn{1}{|c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c|}{Natural Datasets} \\
+                            & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\
+        \hline
+        Isomap            & \textbf{99.85\%} & 99.55\% & 99.91\% & 99.55\% & \textbf{99.80\%} & 99.68\% & 99.87\% & 99.41\% \\
+        Isomap+ENG            & 99.60\% & 99.55\% & \textbf{99.95\%} & 99.60\% & 99.64\% & 99.66\% & 99.77\% & 99.37\% \\
+        LLE            & 98.49\% & 99.40\% & 99.40\% & 98.68\% & 99.14\% & 97.30\% & 99.31\% & 92.47\% \\
+        HLLE            & 95.70\% & 95.69\% & 95.80\% & 93.50\% & 98.76\% & 94.86\% & 98.60\% & 88.65\% \\
+        LE            & 96.86\% & 99.40\% & 99.35\% & 80.30\% & 99.06\% & 99.16\% & 99.63\% & 96.80\% \\
+        LTSA            & 87.55\% & 93.10\% & 95.59\% & 93.04\% & 99.11\% & 94.86\% & 98.52\% & 88.65\% \\
+        T-SNE            & 50.40\% & 50.20\% & 50.20\% & 50.04\% & 49.50\% & 51.40\% & 49.70\% & 51.10\% \\
+        K-PCA            & 99.28\% & 98.78\% & 98.03\% & \textbf{100.00\%} & \textbf{99.80\%} & 99.48\% & \textbf{99.91\%} & 99.12\% \\
+        \hline
+        MVU            & 99.24\% & 99.58\% & 99.76\% & 99.40\% & 99.73\% & \textbf{99.71\%} & 99.82\% & \textbf{99.59\%} \\
+        MVU+ENG            & 99.60\% & \textbf{99.90\%} & 99.90\% & 99.56\% & 99.70\% & 99.70\% & 99.83\% & \textbf{99.59\%} \\
+        MVU-DM            & 99.80\% & \textbf{99.90\%} & 99.80\% & 99.54\% & \textbf{99.80\%} & 99.70\% & 99.80\% & 99.54\% \\
+        \hline
+        \end{tabular}
+        \end{center}
+        \end{table}
+
+
+
+
+        The results of the experiments are summarized in \Cref{tab:1NN,tab:trustworthiness,tab:continuity}. Each table is independent and present the best result from each method, on each dataset, for the respective metric. The user parameter $k$ can take different values between the tables, as some tasks may consider single measures.
+        
+        The best result on each dataset is highlighted in bold.
+
+        There is a visible and unexpected lead in performance of the \ac{KPCA} algorithm in the natural datasets. However, \ac{PCA}, as a linear method, on a fast analysis also performed well on these datasets. It is possible that they don't evaluate the full potential of the non-linear methods. This happening however, does not undermine the performance of the other methods, and the necessity to explore their capabilities further.
+
+        Relatively to the performance difference between \ac{ENG} and regular methods, it seems that there was some improvement, but not overwhelmingly positive.
+
+        When comparing the \ac{MVU} and the proposed \ac{MVU-DM}, it is evident that the latter consistently outperforms the former across most datasets and metrics. This improvement can be attributed to the ability of MVU-DM to handle the disconnected components individually, leading to better preservation of the local structure.
+        
+        There was no evidence of subpar performance of the \ac{MVU-DM} compared to the \ac{MVU}. However, there is the possibility that the inter-component connections used are not representative enough of the global structure. For example, in the process shown in \Cref{fig:component_linearization}, in the case of two components (intrinsically 2-dimensional), by using only a single connection between them, the two components are free to rotate around the vector described by the line crossing the mean points of both components. This rotational freedom can lead to a misrepresentation of the global structure. Note that this limitation is also present on the original \ac{MVU}.
+
+        The additional reasoning for this problem not to surge is that the metrics used do not account for this type of distortion, as they are more focused on the local structure preservation. Future work could explore the use of additional metrics that capture global structure preservation to provide a more comprehensive evaluation of the global structure of the embeddings.
+        
+
+        \begin{table}[t]
+        \caption{Time speedup of MVU-DM compared to MVU for different values of $k$}
+        \label{tab:speedup}
+        \begin{center}
+        \begin{tabular}{|l|c|c|c|c||c|c|c|c|}
+        \hline
+        \multicolumn{1}{|c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c|}{Natural Datasets} \\
+            & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\ \hline
+            $k=5$ & 6.69 & 3.24 & 2.43 & 6.10 & 4.02 & 1.15 & 7.96 & 0.55 \\ \hline
+            $k=10$ & 12.18 & 6.40 & 6.61 & 12.81 & 3.03 & 1.09 & 4.54 & 1.23 \\ \hline
+            $k=15$ & 11.13 & 4.14 & 5.67 & 15.94 & 1.59 & 1.09 & 2.48 & 1.39 \\ \hline
+        \end{tabular}
+        \end{center}
+        \end{table}
+
+
+
+
+        The main improvement from the vanilla \ac{MVU} is best represented, however, in the time performance. As shown in \Cref{tab:speedup}, the \ac{MVU-DM} achieves significant speedups compared to the \ac{MVU}, especially for smaller values of $k$, creating more disconnected components. This speedup is more pronounced on Synthetic datasets, where the sizes of disconnected components are more balanced. In natural datasets, there was a clear presence of a dominant large component, making the individual optimization tasks less balanced, and thus the speedup less pronounced.
+
+        On the \ac{MVU-DM} python implementation, there is a section for launching a given number of matlab engines. On natural datasets, it was found that the data frequently forms a principal manifold; it was visible that while one engine was solving the largest component, a single additional engine was able to process all the other tasks. Thus, on natural datasets, the number of engines was limited to two. On synthetic datasets, however, with a more balanced distribution of points per component, the use of more engines is helpful; one engine per component was the ideal case.
+
+        Further studies could evaluate the impact of purposely creating more disconnected components, even if the data is not naturally structured that way. This could potentially lead to further speedups, although it may also impact the quality of the embeddings. Studies like \cite{adaptive} have already explored the idea of adaptively selecting the neighborhood size to create more balanced components, which could show promising results on this front.
+
+        Overall, the results demonstrate the effectiveness of the proposed MVU-DM algorithm in preserving the local structure of the data while significantly improving computational efficiency. These findings suggest that MVU-DM is a promising approach for dimensionality reduction, particularly in scenarios where the data may lie on multiple disconnected manifolds, and the size of the data is large.
+
+
+    

@@ -1,0 +1,314 @@
+\fancychapter{Maximum Variance Unfolding on Disjoint Manifolds}
+\label{chap:MVU-DM}
+
+
+Both out-of-sample extensions and disconnection handling present improvements to the original \ac{MVU} algorithm. However, they can be adjusted to overcome some of \ac{MVU}'s unchanged limitations.
+
+By significantly reducing the overall density of the data, the out-of-sample extensions might emphasize the presence of noise and disconnections. This is particularly true when the data is already sparse or contains outliers. In such cases, the reduced density can lead to a loss of important structural information, making it more challenging to capture the underlying manifold accurately. Additionally, out-of-sample extensions typically rely on the assumption that new data points are similar to those in the training set. If the new points are significantly different or if they lie in regions of the space that were not well-represented in the original dataset, the extension may fail to provide meaningful embeddings. This latter issue is particularly relevant when using the Nyström method to treat disjoint datasets, where the kernel is computed for one component and then extended to the rest of the components, which may be very different from the first one.
+
+The \ac{ENG} method assumes a constant intrinsic dimensionality along different regions of the manifold. This assumption is not always valid, as some manifolds may exhibit varying intrinsic dimensionalities in different areas. Additionally, this intrinsic dimensionality is required to be computed as a prerequisite, before any type of linearization is done.
+
+Furthermore, and general to the connection inserting extensions, attempting to make the k-NN graph fully connected, meaning the dimensionality reduction process is guaranteed to be computationally as expensive or more than the regular \ac{MVU}. Particularly, the \ac{ENG} creates multiple connections to represent the relationship between two disconnected components, which may be unnecessary or further complicate the dimensionality reduction task. The amount of connections created is also dependent on the intrinsic dimensionality of the data, which is either a user-defined parameter or estimated using a Maximum Likelihood Estimator method. This estimation may not be accurate, leading to suboptimal connections between components.
+
+To address these limitations, a new extension is proposed, combining the advantages of both out-of-sample extensions and disconnection handling methods. This new extension aims to efficiently manage disconnected data while also being capable of handling large datasets through parallelization.
+
+The proposed extension, named \ac{MVU-DM}, will then handle the infeasibility problem by parallelizing the computation of each disjoint component and addressing these disconnections by linearizing the global structure of the disjoint components.
+
+\section{Algorithm Description}
+    The \ac{MVU-DM} is an extension of the \ac{MVU} algorithm designed to handle datasets that are composed of multiple disjoint manifolds, as is \ac{ENG}. This situation often arises in real-world applications where data points may belong to different categories, classes, or just high variability among the data, leading to natural separations in the data distribution. In other cases, simply sampling irregularities in the data, or the presence of noise, may lead to disconnections in the k-NN graph. In these cases, \ac{MVU-DM} can also be applied to effectively manage these disconnections.
+
+    The core idea behind \ac{MVU-DM} is to first identify and separate the disjoint manifolds within the dataset, and independently apply \ac{MVU} to each manifold to learn their respective low-dimensional embeddings. Finally, linearize the global structure of the disconnected components, finding the best relations between disjoint manifolds, and inserting the locally linearized components into the global structure, in the best way possible.
+            
+    The \ac{MVU-DM} approach can be described as follows:
+    \begin{itemize}
+        \item Find the disjoint components of the dataset (e.g., building the k-NN graph);
+        \item Separate the dataset $\boldsymbol{X}$ into  disjoint components: $\boldsymbol{\mathcal{X}}_p$ representing the subset of point indices in component $p$, $\sum_{p=1}^C |\boldsymbol{\mathcal{X}}_p| = |\boldsymbol{X}|$;
+        \item Run \ac{MVU} on each component $\boldsymbol{\mathcal{X}}_p$ independently, obtaining $\boldsymbol{\mathcal{Y}}_p$, the local embeddings;
+        \item Compute the set of representative point indices $\boldsymbol{\mathcal{Z}}_p$ for each component $\boldsymbol{\mathcal{Y}}_p$;
+        \item Compute the inter-component connections $\boldsymbol{\mathcal{L}}$, calculated in the original space, adding the used points to $\boldsymbol{\mathcal{Z}}_p$;
+        \item Run the global \ac{MVU} on $\bigcup_{p=1}^{C} \boldsymbol{\mathcal{Z}}_p$, using the connections $\boldsymbol{\mathcal{L}}$ and retaining intra-component distances, obtaining $\boldsymbol{Z}_p$, the global embeddings;
+        \item Find the transformation that maps $\boldsymbol{\mathcal{Z}}_p$ to $\boldsymbol{Z}_p$, apply it on each component $\boldsymbol{\mathcal{Y}}_p$, obtaining the final embedding $\boldsymbol{Y}_p$;
+        \item Combine the embeddings $\boldsymbol{Y}_p$ into the final embedding $\boldsymbol{Y}$.
+    \end{itemize}
+
+    This process is also represented in algorithmic form in \Cref{alg:mvudm}.
+
+    \begin{algorithm}[ht]
+    \DontPrintSemicolon
+    \textbf{Input}: $\boldsymbol{X}\in\mathbb{R}^{(n\times D)}$ \\
+    \textbf{Hyperparameter}: $k\in\mathbb{R}$\\
+    \textbf{Output}: $\boldsymbol{Y}\in\mathbb{R}^{(N\times d)}$\\
+    \Begin{
+        $\boldsymbol{\mathcal{X}}_1,\dotsc,\boldsymbol{\mathcal{X}}_C \longleftarrow build\_neighborhood\_graph(\boldsymbol{X}, k)$\;
+        $\boldsymbol{\mathcal{Y}}_1,\dotsc,\boldsymbol{\mathcal{Y}}_C \longleftarrow MVU(\boldsymbol{X}, \boldsymbol{\mathcal{X}}_c),\quad p=1,\dotsc,C$\;
+        \BlankLine
+        $\boldsymbol{\mathcal{Z}}_1,\dotsc,\boldsymbol{\mathcal{Z}}_C \longleftarrow choose\_representative\_points(\boldsymbol{\mathcal{Y}}_p),\quad p=1,\dotsc,C$\;
+        $\boldsymbol{\mathcal{L}}, \boldsymbol{\mathcal{Z}}_1,\dotsc,\boldsymbol{\mathcal{Z}}_C \longleftarrow choose\_intercomponent\_connections(\boldsymbol{X}, \{\boldsymbol{\mathcal{X}}_p\}_{p=1}^{C}, \{\boldsymbol{\mathcal{Z}}_p\}_{p=1}^{C})$\;
+        $\boldsymbol{Z}_1\dotsc,\boldsymbol{Z}_C \longleftarrow global\_MVU(\boldsymbol{X},\{\boldsymbol{\mathcal{X}}_p\}_{p=1}^{C},\{\boldsymbol{\mathcal{Y}}_p\}_{p=1}^{C},\{\boldsymbol{\mathcal{Z}}_p\}_{p=1}^{C}, \boldsymbol{\mathcal{L}})$\;
+        \BlankLine
+        $\boldsymbol{Y}_1,\dotsc,\boldsymbol{Y}_C \longleftarrow translate\_components(\boldsymbol{Y}_p,\boldsymbol{\mathcal{Z}}_p),\quad p=1,\dotsc,C$\;
+        \textbf{Return} $[\boldsymbol{Y}_1\quad\cdots\quad\boldsymbol{Y}_C]$\;
+    }
+    \caption{Maximum variance unfolding on disjoint manifolds}
+    \label{alg:mvudm}
+    \end{algorithm}
+    
+    
+
+
+    \subsection{Local Stage}
+        The local stage of the \ac{MVU-DM} algorithm focuses on independently applying the \ac{MVU} algorithm to each disjoint component of the dataset. This stage is crucial for capturing the intrinsic structure of each manifold while ensuring that the local relationships between data points are preserved. This is the key improvement over the vanilla \ac{MVU} and the \ac{ENG}. These, instead of computing disjoint components individually, connect them, ending up with at least $n \times k$ connections, and a kernel matrix of size $n \times n$. \ac{MVU-DM} instead embeds each component individually, resulting in smaller kernel matrices of size $n_p \times n_p$, where $n_p$ is the number of points in component $p$. It is mathematically proven that the computational complexity of a regular \ac{MVU} grows cubically with the number of points \cite{cube}, thus, by dividing the dataset into $C$ components, the overall computational complexity is significantly reduced to $\sum_{p=1}^{C} O((n_p k)^3)$.
+
+        To distinguish between the different components, the extension builds the k-NN graph, with $k$ as a user-defined parameter. The graph is then analyzed to find its connected components, which represent the disjoint manifolds in the dataset, possibly through a Depth-First Search (DFS) or Breadth-First Search (BFS) algorithm. Each connected component is then treated as an independent dataset, and the \ac{MVU} algorithm is applied to each component separately.
+
+
+        \begin{figure}[htbp]
+            \centering
+            \subfigure[Original component in $\mathbb{R}^3$]{\label{fig:component_original}
+            \includegraphics[width=0.3\textwidth]{./Images/1a.paralell.original.0.pdf}}
+            \subfigure[Linearized component in $\mathbb{R}^2$]{\label{fig:component_linearized}
+            \includegraphics[width=0.3\textwidth]{./Images/1b.paralell.linearised.0.pdf}}
+            \subfigure[Representative component]{\label{fig:component_hull}
+            \includegraphics[width=0.3\textwidth]{./Images/1c.paralell.linearised.representative.0.pdf}}
+            \caption{Linearization of a single component}
+            \label{fig:component_linearization}
+        \end{figure}
+
+        After obtaining each component's embeddings, the next step is to find a reasonable way to position these embeddings in a common low-dimensional space. This is done by selecting a set of reference points for each component, which will be used to represent the component in the global structure. These reference points should ideally capture the essential geometry of the component's geometry and distribution. Several strategies can be employed to select these representative points, including:
+        \begin{inparaenum}[(a)]
+            \item computing the principal $d$ directions, and selecting the outmost points as representative points, selecting $2d$ points;
+            \item iteratively selecting the points that are maximally distant from the already chosen representative points, selecting $2^d$ points;
+            \item compute the convex hull of each component, and use its vertices as representative points.
+        \end{inparaenum}
+        The methods tested were (a) and (b), with (a) being the default method. The number of points mentioned is the minimum to guarantee the representation of all dimensions; those were the values used for the experiments.
+
+
+
+        \begin{figure}[htbp]
+            \centering
+            \subfigure[Original dataset in $\mathbb{R}^3$]{
+                \label{fig:dataset_original}
+                \includegraphics[width=0.3\textwidth]{./Images/2a.paralell.original.pdf}
+}
+            \subfigure[First component linearization]{
+                % \label{fig:component_linearized}
+                \includegraphics[width=0.3\textwidth]{./Images/2b.paralell.linearised.representative.0.pdf}
+            }
+            \subfigure[Second component linearization]{
+                % \label{fig:component_hull}
+                \includegraphics[width=0.3\textwidth]{./Images/2b.paralell.linearised.representative.1.pdf}
+            }
+            \caption{Linearization and representative points computation}
+            \label{fig:intra-component_linearization}
+        \end{figure}
+
+        
+    \subsection{Global Stage}
+        The global stage of the \ac{MVU-DM} algorithm focuses on integrating the embeddings of the disjoint components obtained from the local stage into a unified low-dimensional space. This stage is crucial for preserving the overall structure and relationships between the different manifolds while ensuring that the local geometries of each component are maintained.
+
+        Not being restricted to representative points, the algorithm starts by finding inter-component connections that best connect disjoint components. Analysed in the original space, different strategies can be applied:
+        \begin{inparaenum}[(a)]
+            \item iteratively connecting the largest component to its closest component, until the graph is fully connected;
+            \item connecting each component to its $l$ closest components, where $l$ is a user-defined parameter;
+            \item iteratively connecting each component to its closest component, until the graph is fully connected.
+        \end{inparaenum}
+        The latter approach is the default process that scikit-learn uses to handle any disconnections it may find. It can be seen as a simpler \ac{ENG}. The first approach described (a) was the one selected for the experiments, as it was found to produce better results.
+
+        Once the inter-component connections are established, the subset of representative points and their computed connections are the main focus. This set does not only consist of the locally calculated representative points from each component, but also includes the points selected on the inter-component connections. From now on, the mentioned set of representative points will refer to this reference set, the inter-component connections refer to the connections between different components, and the intra-component connections refer to the connections within each component.
+
+        The \ac{MVU} algorithm is then applied to this new set of representative points, with an important modification: the intra-component distances remain constant. This means that during the optimization process, the relative positions between points within each component are fixed, allowing only inter-component adjustments. This constraint helps to maintain the local structures learned in the previous stage while enabling a coherent global arrangement.
+
+        After obtaining the global embedding of the representative points, the final step involves aligning each component's embedding with its corresponding representative points in the global space. This is done by finding an affine transformation that maps the representative points to their new positions in the global embedding. It is calculated by solving the equations:
+        \begin{equation}
+            \boldsymbol{Z}_p = \boldsymbol{{\mathcal{Y'}}}_p \boldsymbol{A} + \boldsymbol{b},
+        \end{equation}
+        equivalent to:
+        \begin{equation}
+            \begin{bmatrix}
+                \boldsymbol{A} \\
+                \boldsymbol{b}
+            \end{bmatrix}
+            = \begin{bmatrix}
+                \boldsymbol{{\mathcal{Y'}}}_p & \boldsymbol{1}
+            \end{bmatrix}^\dag \boldsymbol{Z}_p,
+        \end{equation}
+        where $\boldsymbol{{\mathcal{Y'}}}_p$ the local embeddings $\boldsymbol{{\mathcal{Y}}}_p$ while restricted to the set $\boldsymbol{{\mathcal{Z}}}_p$, and $\boldsymbol{Z}_p$ is the global embeddings of the same set.
+
+        This transformation is then applied to all points within each component's local embedding:
+        \begin{equation}
+            \boldsymbol{Y}_p = \begin{bmatrix}
+                \boldsymbol{\mathcal{Y}}_p  & \boldsymbol{1}
+            \end{bmatrix} \begin{bmatrix}
+                \boldsymbol{A} \\
+                \boldsymbol{b}
+            \end{bmatrix}.
+        \end{equation}
+
+        Finally, the embeddings of all components are combined to form the final low-dimensional representation of the entire dataset: $\boldsymbol{Y} = \bigcup_{p=1}^{C} \boldsymbol{Y}_p$.
+
+        \begin{figure}[htbp]
+            \centering
+            \subfigure[Global representation of a component]{
+                % \label{fig:component_original}
+                \includegraphics[width=0.3\textwidth]{./Images/1c.paralell.linearised.representative.0.pdf}
+            }
+            \subfigure[Global dataset linearized]{
+                % \label{fig:component_linearized}
+                \includegraphics[width=0.3\textwidth]{./Images/2c.paralell.linearised.representative.pdf}
+            }
+            \subfigure[Final dataset]{
+                % \label{fig:component_hull}
+                \includegraphics[width=0.3\textwidth]{./Images/2d.paralell.linearised.representative.pdf}
+            }
+            \caption{Linearization the global structure and final embedding}
+            \label{fig:inter-component_linearization}
+        \end{figure}
+
+
+%             \begin{lstlisting} [style=py,caption={Python code for iteratively selecting representative points}, label={lst:rep_points}]
+% def choose_representative_points_iterative(Yl:list[np.ndarray], d:list[int], M:list[list[int]] = None):
+
+%     if M is None:
+%         M = [[] for _ in range(len(Yl))]
+
+%     def get_next_representative(Yp:np.ndarray, Mp:list[int]):
+%         if len(Mp) > 0:
+%             dist_matrix = np.zeros((Yp.shape[0], ))
+
+%             for ma in Mp:
+%                 temp_dist = np.linalg.norm(Yp - Yp[ma], axis=1)
+%                 dist_matrix = dist_matrix + temp_dist
+%                 dist_matrix[Mp] = -np.inf
+        
+%             return np.argmax(dist_matrix)
+%         else:
+%             return np.argmax(np.linalg.norm(Yp, axis=1))
+
+%     for p, Yp in enumerate(Yl):
+%         for _ in range(len(M[p]), d[p]**2):
+%             M[p].append(get_next_representative(Yp, M[p]))
+%     return M
+%             \end{lstlisting}
+
+%             \begin{lstlisting} [style=py,caption={Python code for selecting the representative points using PCA}, label={lst:rep_points}]
+
+% def chose_representative_points_PCA(self, Yl:list[np.ndarray], d:list[int], M:list[list[int]] = None):
+    
+%     if M is None:
+%         M = [[] for _ in range(len(Yl))]
+
+%     for p, Yp in enumerate(Yl):
+%         kernel = Yp @ Yp.T
+%         H = np.eye(len(Yp)) - np.ones((len(Yp), len(Yp))) / len(Yp)
+%         kernel = H @ kernel @ H
+%         eigenvalues, eigenvectors = np.linalg.eigh(kernel)
+%         idx = np.argsort(eigenvalues)[::-1]
+%         eigenvalues, eigenvectors = eigenvalues[idx], eigenvectors[:, idx]
+%         eigenvalues = eigenvalues[:d[p]]
+%         eigenvectors = eigenvectors[:, :d[p]]
+%         restricted_embedding = eigenvectors @ np.diag(eigenvalues)
+    
+
+%         max_idx = np.argmax(restricted_embedding, axis=0)
+%         M[p].extend([int(i) for i in max_idx])
+%         min_idx = np.argmin(restricted_embedding, axis=0)
+%         M[p].extend([int(i) for i in min_idx])
+%     return M
+%             \end{lstlisting}
+
+
+%             \begin{lstlisting} [style=py,caption={Python code for the iterative connection to largest component strategy}, label={lst:rep_points}]
+% def chose_intercomponent_connections_default(self, Xl:list[np.ndarray], M:list[list[int]]):
+
+%     L:list[list[list[int]]] = [] # L.append([[0, 345], [2 , 741], 34.23])
+
+%     Xs = np.vstack(Xl)
+%     NG = utils.neigh_graph(Xs, self.k1)
+%     cc, labels = csgraph.connected_components(NG, directed=False)
+%     while cc > 1:
+%         largest_component = np.argmax(np.bincount(labels))
+%         largest_component_idx = np.where(labels == largest_component)[0]
+%         other_idx = np.where(labels != largest_component)[0]
+
+%         distances = sp.distance.cdist(Xs[largest_component_idx], Xs[other_idx], metric='euclidean')
+%         shortest_distance = np.min(distances)
+%         ab = np.where(distances == shortest_distance)
+
+%         a_coords = Xs[largest_component_idx][ab[0]]
+%         b_coords = Xs[other_idx][ab[1]]
+    
+%         for p in range(len(Xl)):
+%             if np.any(np.all(Xl[p] == a_coords, axis=1)):
+%                 a_component = p
+%                 a_idx = np.where(np.all(Xl[p] == a_coords, axis=1))[0][0]
+%             if np.any(np.all(Xl[p] == b_coords, axis=1)):
+%                 b_component = p
+%                 b_idx = np.where(np.all(Xl[p] == b_coords, axis=1))[0][0]
+
+%         p, i= a_component, a_idx
+%         q, j = b_component, b_idx
+
+%         a_Gidx = int(np.sum([len(Xl[k]) for k in range(i)]) + a_idx)
+%         b_Gidx = int(np.sum([len(Xl[k]) for k in range(j)]) + b_idx)
+%         NG[a_Gidx, b_Gidx] = shortest_distance
+
+%         if i not in M[p]:
+%             M[p].append(i)
+%         if j not in M[q]:
+%             M[q].append(j)
+%         p = M[p].index(i)
+%         q = M[q].index(j)
+%         L.append([[p, i], [q, j], shortest_distance])
+
+%         cc, labels = csgraph.connected_components(NG, directed=False)
+%     return L
+%             \end{lstlisting}
+
+%             \begin{lstlisting} [style=py,caption={Python code for selecting the representative points using PCA}, label={lst:rep_points}]
+% def chose_intercomponent_connections_sklearn(self, Xl:list[np.ndarray], M:list[list[int]]):
+
+%     L:list[list[list[int]]] = [] # L.append([[0, 345], [2 , 741], 34.23])
+
+%     Xs = np.vstack(Xl)
+%     NG = utils.neigh_graph(Xs, self.k1)
+%     cc, labels = csgraph.connected_components(NG, directed=False)
+%     while cc > 1:
+%         Xc = [Xs[labels == c] for c in range(cc)]
+
+%         for r, Xr in enumerate(Xc):
+%             for s, Xs in enumerate(Xc):
+%                 if r != s:
+%                     distances = sp.distance.cdist(Xr, Xs, metric='euclidean')
+%                     shortest_distance = np.min(distances)
+%                     ab = np.where(distances == shortest_distance)
+
+%                     a_coords = Xr[ab[0]]
+%                     b_coords = Xs[ab[1]]
+
+%                     for p in range(len(Xl)):
+%                         if np.any(np.all(Xl[p] == a_coords, axis=1)):
+%                             a_component = p
+%                             a_idx = np.where(np.all(Xl[p] == a_coords, axis=1))[0][0]
+%                         if np.any(np.all(Xl[p] == b_coords, axis=1)):
+%                             b_component = p
+%                             b_idx = np.where(np.all(Xl[p] == b_coords, axis=1))[0][0]
+                    
+%                         p, i = a_component, a_idx
+%                         q, j = b_component, b_idx
+                
+%                         a_Gidx = int(np.sum([len(Xl[k]) for k in range(i)]) + a_idx)
+%                         b_Gidx = int(np.sum([len(Xl[k]) for k in range(j)]) + b_idx)
+%                         NG[a_Gidx, b_Gidx] = shortest_distance
+                    
+%                         if i not in M[p]:
+%                             M[p].append(i)
+%                         if j not in M[q]:
+%                             M[q].append(j)
+%                         i = M[p].index(i)
+%                         j = M[q].index(j)
+
+%                         L.append([[p, i], [q, j], shortest_distance])
+%         cc, labels = csgraph.connected_components(NG, directed=False)
+%     return L
+%             \end{lstlisting}
+        

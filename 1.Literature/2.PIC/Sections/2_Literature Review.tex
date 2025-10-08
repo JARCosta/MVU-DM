@@ -1,0 +1,389 @@
+\section{Literature Review}
+
+    % colour code:
+    % red: about to drop out, unless it is requested to stay / some notes
+    % orange: newly inserted annotations/doubts
+    % olive: reformulated information in the need for a last review to be added
+    % brown: to review later/somethings I need to study more to explain
+
+
+    % \paragraph{Curse of dimensionality} Curse of dimensionality is declared whenever a data set consists of too many variables comparatively to its number of records. This phenomenon represents a problem because for each variable inserted into a set, the number of records needed to represent the possible values taken by those variables grows exponentially.
+
+    \subsection{Convex Optimisation}
+
+    \paragraph{Convex Sets}
+    Given a set $S\in R^D$, it is considered convex if and only if for any pair of points, all points in the straight line between them are contained in the set.
+    This is a simplification of the following condition:
+    \begin{equation}
+        (1- \alpha)x + \alpha y \in S,
+    \end{equation}
+    for all $x$,$y \in S$ and $\alpha \in [0, 1]$.
+    
+    
+    \paragraph{Convex Functions}
+    By definition, a function $f$ is convex if for any pair of values, $x$ and $y$, the value of the function is never higher than the line segment between these two points. This can be written with the following mathematical expression:
+    \begin{equation}
+        f(\alpha x + (1-\alpha)y) \le f(\alpha x) + f((1-\alpha)y),
+    \end{equation}
+    for all $x$,$y \in  $ dom$(f)$ and $\alpha \in [0, 1]$.
+    
+    There are cases where a function, and thus an optimisation problem, might be convex but take no global minimum like the case of the exponential function. On the other hand, a constant function would take infinite global minima. 
+    
+    \paragraph{Optimisation Problem}
+    An optimisation problem consists of finding the optimal values of a set of variables $x$, possibly within a subset $\Omega\in D$ of their domain (which is represented by constraints), such that some function of interest $f$ is either maximized or minimised, depending on the problem. When the purpose of the problem is to pursue a maximization of the optimised function, it shall be denominated utility function, while when it is meant to be minimised it is called cost function. We call "variables of interest" the variables to be changed in order to reach the optimal function value. My suggestion for presenting the general form of an optimisation problem is:
+    \begin{align}
+        \min_{x\in D} \quad & f(x)\\
+        \textrm{s.t.} \quad 
+            & x\in\Omega, \text{ where }\Omega\subseteq D.
+    \end{align}
+
+
+    Each optimisation problem can be classified considering the nature of the function to optimise and the existence of the constraints.
+    If a problem has any kind of constraint, it is declared as a Constrained Problem. If either the objective function is not convex, or the constraints define a non-convex set, then the whole problem is denoted as non-convex. This is, for a problem to be convex, all the functions to optimise and the constraints have to be convex.
+    
+    According to the differences in optimisation problem and types of constraints, the optimisation problems can be classified as:
+    \begin{itemize}
+        \item \textbf{Linear Programming (LP)} problems take an affine function as an objective function and linear constraints. They are computationally the simplest to solve, usually solvable using the simplex algorithm or the interior point method.
+        \item \textbf{Quadratic Programming (QP)} problems involve the optimisation of a quadratic function, while also being limited to linear constraints. Depending on the convexity of the problem, a simple gradient method may reach the global minimum if it is an unconstrained problem, while the Karush–Kuhn–Tucker conditions may be used to successfully solve constrained ones. On non-convex situations when either the objective function or the constraint's set are non-convex, a gradient method would need the help of a global search extension to then be able to find the global minima.
+        
+        \item \textbf{Second Order Cone Programming (SOCP)} problems consist of the optimisation problems constrained by constraints that form a second order cone, these are formulated as $\| \bm{A}x+b \|_2 \le c^\top x +d$.
+        
+        \item \textbf{Semi-definite Programming (SDP)} problems represent the optimisation problems that are constrained by a linear matrix inequality of the form $x_1\bm{F}_1 + \ldots + x_n\bm{F}_n + \bm{G} \preceq 0$.
+        %TODO: linear matrix inequalities
+        % https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf#page=182.55
+    \end{itemize}
+
+    \subsection{Dimensionality Reduction}
+    %TODO: rewrite
+    Dimensionality reduction is the process of reconstructing a given dataset in a space described by fewer dimensions. This is done by finding a projection from the higher to lower dimensional space, approximating the dimensions of the dataset in analysis to its intrinsic dimensions, the theoretical number of variables necessary to fully represent the data in observation.
+    
+    \subsubsection{Linear Methods}
+    
+    \paragraph{Principal Component Analysis (PCA)}
+        The most commonly used is Principal Component Analysis \cite{pca} which, by comparing the linear relation between each pair of variables, creates a new set of variables in a linear subspace that retains as much variance as possible. Its simplified procedures are:
+        
+        Let's consider a data set with $n$ records represented by $D$ variables ($\bm{X}\in\mathbb{R}^{n\times D}$), which we want to reduce to $d$ variables ($\bm{Y}\in\mathbb{R}^{n\times d}$), where $d << D$.
+        
+        For PCA to compare and find the best $d$ variables composed of the original ones, it relates them by computing a covariance or correlation matrix which, importantly, centres each variable in its calculations.
+        \begin{align}
+            \text{covariance}(\bm{X}_i, \bm{X}_j) = \frac{\sum_k (\bm{X}_{ik} - \overline{\bm{X}_i})(\bm{X}_{jk} - \overline{\bm{X}_j})}{n}, &&
+            \text{correlation}(\bm{X}_i, \bm{X}_j) = \frac{\text{covariance}(\bm{X}_i, \bm{X}_j)}{\sigma_{\bm{X}_i}\sigma_{\bm{X}_j}}.
+        \end{align}
+        %TODO: usually using the covariance matrix, the covariance matrix is formed from each pair of points 
+        
+        Usually using the covariance, the similarity matrix $\bm{\Sigma}\in\mathbb{R^{D\times D}}$ is constructed iteratively relating each pair of variables, but it can also be calculated matricially following: \\
+        \begin{align}
+            \bm{X'}_k &= \bm{X}_k - \overline{\bm{X}_k} \qquad, \forall k \in \{0, 1, \ldots, D\} \\
+            \underbrace{\bm{\Sigma}}_{D\times D} &= \frac{\overbrace{\bm{X'}^\top}^{D\times n}\overbrace{\bm{X'}}^{n\times D}}{\bm{n}},
+            \label{eq: Sigma}
+        \end{align}
+        where $\bm{X'}_k\in\mathbb{R}^n$ represents the $\bm{X}_k$ matrix centred by components. \\
+        
+        Now that we have the \textit{similarity matrix} $\bm{\Sigma}$, we look for a new orthogonal basis that maximises the variance of the dataset over the minimum components possible. To do this, since we are considering a symmetric and positive semi-definite matrix, performing an eigenvalue decomposition over the matrix $\bm{\Sigma}$ returns a set of orthogonal eigenvectors, and their eigenvalues, representing the orthogonal basis that maximises the dataset's variance.
+        
+        These, when analysed individually, represent each of the new directions of the new eigenbasis and the scale of the variance of the dataset over that particular direction.
+
+        Note that this approach can be used over any type of similarity matrix, for example, any symmetric distance matrix between points can also be used, for example, the Gram matrix $\bm{K} = \bm{XX}^\top$. However, they need to be double-centred following the transformation:
+        \begin{equation}
+            k_{ij} = - \frac{1}{2}\left(d_{ij}^2 -\frac{1}{n} \sum_l d_{il}^2 - \frac{1}{n} \sum_l d_{lj}^2 + \frac{1}{n^2} \sum_{lm} d_{lm}^2 \right),
+        \end{equation}
+        where $d_{ij}$ represent the euclidean distance between $i$ and $j$, for example. % Note that other methods also have formulations comparable to PCA with covariance which do not need double-centring, such as MDS, Isomap, LEE, LE, H-LLE, MVU.
+        
+        Since the purpose is to reduce the dimensionality of the data set, we do that by selecting the $d$ new variables, i.e. eigenvectors, that correspond to the biggest eigenvalues, ending up with the new variables that display the most variance. The value of $d$ is usually set as a way to retain a certain percentage of the variance in the original data, usually $95-99\%$ of the variance.\\
+
+        The operation to perform the eigenvalue decomposition is:
+        The conditions that need to stand when performing the eigenvalue decomposition are: 
+        \begin{equation}
+            \bm{\Sigma V} = \bm{V\lambda}
+            \quad \iff \quad
+            \bm{\Sigma} = \bm{V\lambda V}^\top
+            \label{eigenvalue decomposition},
+        \end{equation}
+        where $\bm{\lambda}\in\mathbb{R}^{d\times d}$ is the diagonal matrix of the $d$ biggest eigenvalues of $\bm{\Sigma}$, and $\bm{V}\in\mathbb{R}^{D\times d}$ is the column matrix of eigenvectors corresponding to $\lambda$'s eigenvalues. Importantly for these calculations, these two conditions are equivalent solely because $\bm{\Sigma}$ is symmetric also due to that, the eigenvector matrix $\bm{V}$ represent an orthogonal basis.
+
+        To project the data points from the higher dimensional space to the lower one perform:
+        \begin{equation}
+            \bm{Y} = \bm{XV},
+            \label{reduction mapping}
+        \end{equation}
+        where $Y\in\mathbb{R}^{n\times d}$ represent the data points in the embedding space (i.e., the PCA projections) and $\bm{X}\in\mathbb{X}^{n\times D}$ is the source matrix.
+        
+        Finally, we can reconstruct an approximation of the original data using the \textit{projection matrix} $\bm{VV}^\top$:
+        \begin{equation}
+            \bm{\hat{X}} = \underbrace{\bm{XV}}_{\text{PCA projs.}}\bm{V}^\top.
+        \end{equation}
+        
+        We call the \textit{embeddings}, the representation of the original data points in the lower dimensional space, but in this particular method, they are also called the PCA projections.
+        % also dizer que somamos a média se os dados não estiverem centrados
+        If the original data were not already centred, the final step is to sum the mean of each variable to each point, returning the reconstructed data to the same relative position as the original. Note that, here, we operate over the reconstructed points in the data space, in $D$ dimensions.
+    
+    \paragraph{Multidimensional Scaling (MDS)} % MDS como problema de optimização
+
+        Like PCA, Multidimensional Scaling (MDS) \cite{mds, mds-nonmetric} is a linear method that finds the best orientations for new variables from an eigenvalue decomposition, but this time the matrix to operate on can consider any form of distance between the original points and after the reduction.
+        
+        It can also be represented as an optimisation problem, where the objective is to minimise the difference of the distances between the two spaces, i.e. for a given point on the original space, we want its distance to any other point to be equal to the \textit{euclidean} distance between these points in the space after applying dimensionality reduction.
+        
+        MDS is another linear method that given a desired number of variables, maintains the distance between each pair of points the best it can. Like PCA, it can be solved in closed form.
+        
+        Analytically, the process is to build a centred inner-product matrix $\bm{B}\in\mathbb{R}^{n\times n}$, commonly considered a \textit{similarity matrix} (can be viewed as how much two given points are related). It is built from the distance matrix $\bm{D}\in\mathbb{R}^{n\times n}$ representing the distance between any two given points. $\bm{B}$ is then calculated:
+        \begin{align} % source: https://rich-d-wilkinson.github.io/MATH3030/6-1-classical-mds.html#eq:defB
+            \bm{B} = -\frac{1}{2}\bm{HD} \times \bm{DH},
+            \label{MDS similarity matrix}
+        \end{align}
+        where $\bm{H}$ represents the centring matrix $\bm{H} = \mathbb{I}_n - \frac{1}{n}\bm{1}_n\bm{1}_n^\top$, fundamentally, $\bm{1}_n\bm{1}_n^\top$ represent an $n\times n$ matrix of 1's. Note that $\bm{D} \times \bm{D}$ represent the pairwise product (Hadamard product).
+        
+        After that, an eigenvalue decomposition can be performed over the matrix $\bm{B}$ and we can select the eigenvectors corresponding to the $d$ biggest eigenvalues. The procedure is the same as in PCA (Eq. \ref{eigenvalue decomposition}).
+        
+        MDS can be written as an optimisation problem:
+
+        \begin{equation}
+            \min_{\bm{Y}} \quad \sum_{ij} \left( 
+            d_{ij} - \| \bm{y}_i - \bm{y}_j \|_2
+            \right)^2,
+            \label{MDS formulation problem}
+        \end{equation}
+        where $\bm{Y}=\begin{bmatrix}\bm{y}_1 & \cdots & \bm{y}_n\end{bmatrix}\in\R^{n\times d}$, and $d_{ij}$ represents a distance function between $\bm{x}_i$ and $\bm{x}_j$ (i.e., points in the original space).
+
+        In \textit{Classical} MDS, we attempt to preserve euclidean distances in the embedding space, i.e., we solve:
+        
+        \begin{equation}
+            \min_{\bm{Y}} \quad \sum_{ij} \left( 
+            \|\bm{x}_i - \bm{x}_j \|_2 - \| \bm{y}_i - \bm{y}_j \|_2
+            \right)^2
+            \label{classical MDS formulation problem}
+        \end{equation}
+
+        In the same circumstances, since we know that $\bm{B}$ will be symmetric and positive semidefinite, we can directly calculate it from the original dataset:
+        \begin{equation}
+            \bm{B} = \left( \bm{HX} \right) \left( \bm{HX} \right)^\top,
+        \end{equation}
+        to further proceed with the closed-form approach.
+
+        Classical MDS gives the exact same solution as PCA. As we will see in the next section, we may choose other distance metrics to account for nonlinearities in the data manifold.
+        
+        \paragraph{Observations}
+        Although linear methods can be very useful and accurate on many linear cases, because they assume linearity between variables, when put to use on data sampled from non-linear manifolds they can't capture this complex relation between variables, so their performance decreases in function of the curvature of the manifold.
+
+    \subsubsection{Isomap} 
+        The Isomap \cite{isomap} reduction method can be seen as an extension of MDS where the distance matrix to be used is not calculated by Euclidean distances but rather by geodesic distances.
+
+        
+        %By assuming local linearity, Isomap's optimisation function is not about the Euclidean distance between points as Classical MDS is, but the geodesic distance instead. Fundamentally, aside from the distance calculations, they are very alike. \\
+        
+        %Mathematically, the geodesic distance represents the shortest distance between two points along a manifold. Since the manifold is approximated through a neighbourhood graph, we approximate geodesic distances between points as shortest paths along the graph, usually computed using the Dijkstra or Floyd-Warshall algorithms.
+        % TODO: merge
+        %but importantly, the path can only transit between points, so it is calculated as the smallest sum of Euclidean distances of a path between two points; its true value is regularly approximated from the Dijkstra or Floyd-Warshall algorithms.\\
+        
+        \textit{Local linearity} is an important and common assumption made by many non-linear methods where the curvature of the manifold in the small region around a given point can be considered linear, thus ignoring the curvature and allowing for the true distance between points to be approximated by the Euclidean distance. This property is crucial for geodesic distance calculations.
+
+        The geodesic distance is the theoretical distance between two points along a manifold. In practice, we assume local linearity. This assumption enables us to create neighbourhoods of data points around each one from the Euclidean distance between them, this is, by calculating the Euclidean distance from a point to all the others and selecting only the closest ones, we create a \textit{neighbourhood graph}.
+        Connecting neighbours in the neighbourhood graph and finding the shortest path between two given points is a good approximation of the geodesic distance. A usual approach for calculating it is using the Dijkstra or Floyd-Warshall algorithms. \\
+        % TODO: geodesic distance?-> neighbourhood graph -> local linearity -> Dijkstra
+
+        In general, we cannot expect euclidean distances between points in the data space to be proportional to distances along the data manifold. This downside is even more noticeable on distant points. To better relate points along a manifold, we may use geodesic distances, since they basically calculate the same Euclidean distance if only the manifold was approximately laying flat, overcoming the non-linearity by traversing the manifold along neighbour points.
+        
+        Here, the method builds a distance matrix $\bm{D}\in\mathbb{R}^{n\times n}$ representing the geodesic distance from a given point to each of the others. Using geodesic distances is what makes this method non-linear. To calculate geodesic distances along a graph, we can use the Dijkstra or Floyd-Warshall algorithms. The optimisation problem is formulated as in Eq. \ref{MDS formulation problem}, where the distance between points $\bm{x}_i$ and $\bm{x}_j$ is given by the approximated geodesic distance $d_{ij}$.
+        
+        Like MDS, we can solve the problem in closed form by squaring the distance matrices and centring them, like a PCA approach that uses a distance matrix instead. The approach is to calculate the similarity matrix $\bm{B}$ (as in Eq. \ref{MDS similarity matrix}) using (approximated) geodesic distances $d_{ij}$ rather than euclidean distances in the data space.
+
+        Note that this geodesic distance function can also be viewed as a kernel for other methods, i.e., a transformation function/matrix relating the data points.
+    
+    \subsubsection{Locally Linear Embedding (LLE)}
+        To mitigate MDS and Isomap's main flaw of giving too much focus to the distance between very far apart points instead of the closest and most important ones to optimise, the LLE \cite{lle} bases itself on the relation of each point with its neighbours.
+
+        Because its process of reducing the dimensionality is based on translation, rotation, and rescaling, by creating a matrix of influences $\bm{W}$ between neighbouring points, it is then able to use this relation matrix to embed the data. The problem is represented as:
+        \begin{equation}
+            \min_{\bm{Y}} \quad \sum_i {\| \bm{y}_i - \sum_j w_{ij} \bm{y}_{ij} \|}^2,
+        \end{equation}
+        where ${w_i}_j \in [0,1]$ represents how much a point $j$ influences $i$'s position. Note that we only calculate influences between points that are $k$-nearest neighbors. This is how the weight matrix is calculated:
+        \begin{align}
+            \min_{\bm{W}} \quad &
+            \sum_i {\| \bm{x}_i - \sum_j w_{ij} \bm{x}_{ij} \|}^2 \\
+            \textrm{s.t.} \quad 
+                & \sum_{j\in\mathcal{N}_i} w_{ij} = 1,\quad\forall i=1,\dotsc,n,
+            \label{eq:lle-weights}
+        \end{align}
+        where $\mathcal{N}_i$ is the set of neighbours of $i$. Consequently, the rest of the $w_{ij}$ for points $j$ that are not in the neighbourhood of $i$ are left as 0, making $\bm{W}$ a sparse matrix.
+        
+        With this said, the problem minimises the difference between the current position of a given point and the position that its neighbours would pull it to, originally. This creates a trivial solution where all points coincide at the origin so, to fix this, the constraint $ \| y_i^{(k)} \|^2 = 1$ for all $k$ dimensions is added, preventing points from ending up in the origin.
+        
+        The optimal solution to the optimisation problem can be found following:
+        \begin{align}
+            \sum_i {\| \bm{y}_i - \sum_j \bm{w}_{ij} \bm{y}_{ij} \|}^2
+                &= (\bm{Y}- \bm{WY})^\top(\bm{Y}- \bm{WY}) \\
+                &= \bm{Y}^\top (\bm{I} - \bm{W})^\top(\bm{I} - \bm{W}) \bm{Y} \\
+                &= (\bm{I} - \bm{W})^\top(\bm{I} - \bm{W}),
+        \end{align}
+        where $\bm{I}\in\mathbb{R}^{n\times n}$ is the identity matrix and $\bm{W}\in\mathbb{R}^{n\times n}$ is the reconstruction matrix.
+        
+        The resulting embedding matrix $\bm{Y}\in\R^{n\times n}$ can then be used as in Eq. \ref{eigenvalue decomposition} as a similarity matrix, where the selection of the $d$ smallest eigenvectors ends up with the usual eigenbasis for the embedded space.
+
+    \subsubsection{Laplacian Eigenmaps (LE)}
+        Like LLE, Laplacian Eigenmaps (LE) \cite{le} create a weight matrix $\bm{W}$ which quantifies the influence of each neighbour of a given point in its coordinates. This, while assuming that the specific point and its neighbours are in the same plane, that is, local linearity.
+
+        Instead of minimising the distance to the theoretical weighted position that each point's neighbours are pulling it to, LE minimises the weighted distance to each neighbour directly:
+        \begin{equation}
+            \min_{\bm{Y}} \quad \sum_{ij} {\| \bm{y}_i - \bm{y}_j \|}^2 w_{ij},
+        \end{equation}
+        where $\bm{W}$ is a sparse matrix, that for each pair of neighbour points $i$ and $j$, ${w_i}_j$ is computed using the Gaussian kernel function:
+        \begin{equation}
+            w_{ij} = e^{-\frac{{\| \bm{y}_i - \bm{y}_j \|}^2}{2\sigma^2}}.
+        \end{equation}
+        This means that neighbour points in the high-dimensional space are put as close together as possible in the embedding space.
+        
+        To further solve the optimisation problem, the following diagonal degree matrix $\bm{M}\in\mathbb{R}^{n\times n}$ is built based on $m_{ii}=\sum_j \bm{w}_{ij}$, consisting of the sum of the weights at each point, note that they do not sum up to $1$ as in Eq. \ref{eq:lle-weights}.
+        
+        The problem can then be decomposed into:
+        \begin{equation}
+            \sum_{ij} {\| \bm{y}_i - \bm{y}_j \|}^2 \bm{w}_{ij} =
+                \underbrace{
+                    \sum_{i} {\| \bm{y}_i\|}^2 m_{ii} +
+                    \sum_{j} {\| \bm{y}_j \|}^2 m_{jj}
+                }_{2\bm{YMY^\top}} +
+                \underbrace{
+                    2\sum_{ij} (\bm{y}_i \bm{y}_j^\top ) \bm{w}_{ij}
+                }_{2\bm{YWY^\top}},
+        \end{equation}
+        optimising this problem finds the same solution as the following:
+        \begin{align}
+            \min_{\bm{Y}} \quad & \bm{Y^\top LY} \\
+            \textrm{s.t.} \quad 
+                & \bm{Y^\top MY} = \bm{I_n},
+        \end{align}
+        where the constraint is needed to prevent the same trivial solution as in LLE.
+        
+        It can then be solved as the eigenvalue problem:
+        \begin{equation}
+            \bm{LV} = \bm{\lambda MV},
+        \end{equation}
+        where $\bm{L}\in\mathbb{R}^{D\times D}$ is the Laplacian matrix $\bm{L} = \bm{M}+\bm{W}$, selecting then the $d$ smallest eigenvectors and proceeding like explained before.
+
+    \subsubsection{Hessian Locally Linear Embedding (H-LLE)}
+        Considerately related to LLE, but instead of calculating the weighted best coordinates, in the embedded space, for a point from its k-nearest neighbourhood, the Hessian LLE \cite{h-lle} approximately calculates the curviness of the manifold from the local Hessian and minimises it in order to flatten the dataset.
+        This is done simply by performing an eigenvalue decomposition over the Hessian Matrix of local Hessian approximations and looking for the $d$ smallest eigenvalues, the respective eigenvalues form the embedded $\bm{Y}$ matrix containing the low dimensional representation of the data.
+
+        To find the matrix of Hessian estimations at each point, H-LLE assumes local linearity across the neighbourhood of each point and computes its tangent space by applying PCA to its $k$-nearest neighbors (collected into a matrix), ending up with selecting the $d$ most representative directions of the manifold around each data point.
+        
+        After that, the estimate of the Hessian at each point is formulated from the matrix $\bm{Z}$ which is composed of the cross product between the principal components, with an added column of $1$'s, at each point, and then orthogonalised through the Gram-Schmidt process.
+
+        The local tangent Hessian estimation $\bm{H}_i$ is now built by transposing the selection of the last $\frac{d(d+1)}{2}$ columns of $\bm{Z}$, and the global $\bm{\mathcal{H}}_lm$ Hessian estimator consists of:
+        \begin{equation}
+            \bm{\mathcal{H}}_{lm} = \sum_{i} \sum_{j} \left((\bm{H}_i)_{jl} \times (\bm{H}_i)_{jm}\right).
+        \end{equation}
+        After estimating the tangent spaces on each point, H-LLE proceeds by minimising the curvature of the data set, described by $\bm{\mathcal{H}} \in \mathbb{R}^{n\times n}$, by solving the eigenvalue problem as in Eq. \ref{eigenvalue decomposition} and selecting the eigenvectors correspondent to the $d$ smallest non-zero eigenvalues results in the $\bm{Y} \in\mathbb{R}^{n\times d}$ embedded data.
+
+        Importantly, the number $k$ of nearest neighbours around each point to approximate the Hessian must be such that $k > d (1 + \frac{1 + d}{2})$, where $d$ is the number of components found by PCA. This means that for regions of the manifold that are nonlinear enough, the number of components necessary to represent the data in a linear subspace may result in a very large $k$, which may fail in capturing local geometry. This seems to happen in practice, as demonstrated by experiments on natural datasets, which tend to lie on nonlinear manifolds \cite{h-lle}.
+    
+    \subsubsection{Local Tangent Space Analysis (LTSA)}
+        Comparably to H-LLE, but linearising the data in a different manner, LTSA \cite{ltsa} describes its input data set as the tangent space of the manifold at each data point.
+        
+        With a different perspective, the local tangent space at each point will be approximated to its tangent space in the lower dimensionality.
+        
+        Fundamentally, the LTSA, from the local tangent space of the manifold at each data point, tries to find a mapping from that local tangent space, to the embedded position of the point in analysis.
+        To put this in practice, the LTSA involves of the minimisation of differences between the possible embedded positions of a point, and the result after performing the mapping from the local tangent of the point to the lower dimensional space. This is formulated as the optimisation problem: 
+        \begin{equation}
+            \min_{\bm{Y},\bm{L}} \quad \sum_i \| \bm{y}_i \bm{J}_i - \bm{L}_i \bm{\Theta}_i \|^2,
+        \end{equation}
+        where $\bm{\Theta}_i$ represents the local tangent space calculated by the PCA over the manifold at the point $\bm{x}_i$, $\bm{L}$ is the map from the tangent of the manifold at the same point $\bm{x}_i$ to the objective point $\bm{y}_i$ and $\bm{J}_i$ is a double-centring matrix transformation equivalent to performing:
+        \begin{equation}
+            d_{ij} = -\frac{1}{2} \left( d_{ij} - \frac{1}{k} \sum_{l \in \mathcal{N}_i} d_{il} - \frac{1}{k} \sum_{l \in \mathcal{N}_i} d_{jl} + \frac{1}{k^2}\sum_{l,m \in \mathcal{N}_i} d_{lm} \right),
+            \label{double centre}
+        \end{equation}
+        where $k$ is the size of the neighbourhood of $i$ and $\mathcal{N}_i$ represents the set of its points. This operation ensures that each row and column, of the resulting matrix, have a mean of $0$, and also, the whole matrix is mean $0$.
+    
+        This means that LTSA is concurrently looking, for each data point, for the final position and the map from the local tangent space to its final position.
+        
+        This optimisation method can also be solved as an eigenvalue problem over the alignment matrix $\bm{B}\in\mathbb{R}^{n\times n}$ which is iteratively computed from a matrix of 0's, where for the set $\mathcal{N}_i$ of nearest neighbours of $\bm{x}_i$ the matrix is updated following:
+        \begin{equation}
+            \bm{B}_{\mathcal{N}_i\mathcal{N}_i} = \bm{B}_{\mathcal{N}_{i-1}\mathcal{N}_{i-1}} + \bm{J}_k(\bm{I} - \bm{V}_i\bm{V}_i^\top)\bm{J}_k,
+        \end{equation}
+        where $\bm{V_iV_i}^\top$ represent the PCA projection calculated from the local neighbourhood of $i$, and subsequently, the local alignment of the manifold at the data point $i$ is represented by $\bm{I - V_iV_i}^\top$.
+        
+        The global alignment matrix $\bm{B}$ then represents the sum of all the local alignment matrices. Finishing the process, $\bm{B}$ is used to find the eigenbasis and subsequently the embedded data, by performing an eigenvalue decomposition over $0.5(\bm{B} + \bm{B}^\top)$ and selecting the eigenvectors corresponding to the $d$ smallest non-zero eigenvalues. \\        
+    
+    \subsubsection{t-distributed Stochastic Neighbour Embedding (t-SNE)}
+        Originating from SNE \cite{sne}, t-SNE \cite{t-sne} is also most focused on data visualisation, that is, it is best fitted for dimensionality reduction into 2 or 3 dimensions. Both need a hand-picked final number of dimensions and capture the differences between data points by computing the conditional probability of a neighbourhood, $p_{i|j}$ and a similar $q_{i|j}$ for the reduced space, which can be compared with the weights from LE and other weight-based methods, but with a different way of calculating:
+        \begin{align}
+            p_{i|j} = \frac{\text{exp}(-\|\bm{x}_i-\bm{x}_i\|_D^2/2\sigma^2)}{\sum_{k\neq l}\text{exp}\left(-\| \bm{x}_k - \bm{x}_l \|_D^2/2\sigma^2 \right)}, &&
+            q_{i|j} = \frac{\text{exp}(-\|\bm{y}_i-\bm{y}_i\|_d^2)}{\sum_{k\neq l}\text{exp}\left(-\| \bm{y}_k - \bm{y}_l \|_d^2 \right)}
+        \end{align}
+        
+        Due to being asymmetric, these cause a problem on outlier points, where the distance to most points is very large, which causes the point to be too far away in the reduced space. t-SNE reduced its impact by using symmetric distances between each point $i$ and $j$ applying the mapping $p_{ij} = p_{ji} = \frac{p_{i|j} + p_{j|i}}{2n}$.
+        
+        Also, to better organise and visualise the data, instead of following a Gaussian distribution of the neighbour points over a given point $\bm{x}_i$, the t-SNE changes the formulation of $q_{ij}$ to follow a student t-distribution with one degree of freedom in order to spread the clusters further while not making the already separated ones too far:
+        
+        \begin{equation}
+            q_{ij} = \frac{(1+\| \bm{y}_i - \bm{y}_j \|^2)^{-1}}{\sum_{k\neq l} (1+\| \bm{y}_k - \bm{y}_l \|^2)^{-1}}.
+        \end{equation}
+        
+        This creates a much more balanced gradient function, avoiding situations where SNE would be biased to attract points that were already in seemingly good positions. 
+
+        The following action is to minimise the sum of the Kullback-Leiber Divergence over all the points:
+        \begin{equation}
+            C = KL(P\|Q) \sum_i \sum_j p_{ij} \log\frac{p_{ij}}{q_{ij}},
+        \end{equation}
+        which, due to the symmetry of t-SNE, can be solved with a simple gradient function:
+        \begin{equation}
+            \frac{\partial C}{\partial \bm{y}_i} = 4 \sum_j (p_{ij} - q_{ij})(\bm{y}_{i} - \bm{y}_{j}).
+        \end{equation}
+        
+        More importantly, this new probability distribution on the lower-dimensional space also approaches the inverse square law, meaning that, at far distances, the scale of the map becomes virtually irrelevant, making far-apart clusters of map points behave as a single point. 
+
+        This leads us to the most impactful change in t-SNE: considering clusters of points as single points, the original $O(n^2)$ formulation can be made into $O(n \log(n))$. 
+
+        Besides, from the fact that the whole structure of this method is focused on 2D and 3D representations of the data, this latest optimisation also decays with the increase of dimensions, combined with the fact that it is needed to know into how many dimensions we want t-SNE to reduce the data to, in cases of higher and harder to calculate intrinsic dimensions, t-SNE does not get so competitive comparatively with other DR methods.
+
+    \subsubsection{Kernel PCA (K-PCA)}
+        The Kernel PCA \cite{k-pca} is a method generalization from the classic PCA. Instead of searching for the best eigenbasis directly on the matrix presenting the relation between each pairwise variable, the K-PCA performs an initial transformation on the source data, following a kernel function. This operation can be related to a Classical MDS where the objective function, on an Euclidean basis, is transformed following the kernel transformation that is virtually able to unbend any non-linearity present in a manifold. Because K-PCA no longer uses the covariance or correlation values between variables, which naturally centre the data, now, the K-PCA uses a double-centring transformation like Eq. \ref{double centre}.
+
+        After applying the kernel function and centring the data set, it ends up with an equivalent $\bm{X'}\in\mathbb{R}^{n\times D}$ matrix which can continue the PCA's solution as in Eq. \ref{eq: Sigma}: computing the covariance $\bm{\Sigma} = \bm{X}'\bm{X}'^\top$ and selecting the eigenvectors corresponding to the top $d$ eigenvalues.
+
+        This method is not used more often because it is normally hard to find an adequate kernel function to linearise the dataset, since it is not usually found by any calculations, but rationalising, and some trial and error.
+    
+    \subsubsection{Maximum Variance Unfolding (MVU)}
+    
+    Maximum Variance Unfolding \cite{mvu} has a consequence that ended up fixing K-PCA's main flaw as stated before. Its optimisation problem can be observed as the search for a good lineariser kernel process: in basic terms, the reasoning behind MVU is to stretch any existing manifold that there might exist in the data set. This is done by maximizing the distance between the points of the data set, while maintaining local isometry between neighbour points.
+    
+    All this while keeping the data centred, to remove degenerate solutions, formulates:
+    \begin{align}
+        \max_{\bm{Y}} \quad & \sum_{ij} {\| \bm{y}_i - \bm{y}_j \|}^2 \\
+        \textrm{s.t.} \quad 
+            & \sum_i \bm{y}_i = 0\\
+            & {\| \bm{y}_i - \bm{y}_j \|}^2 = {\| \bm{x}_i - \bm{x}_j \|}^2, \forall{i,j} \in\bm{G},
+    \end{align}
+    where the first constraint is responsible for keeping the data set centred while the following is the one which maintains the local distances after the linearisation of the manifold. $\bm{G}\in\mathbb{R}^{n\times n}$ is the neighbourhood matrix which represents whether $j$ is a $k$-nearest neighbour of $i$.
+    
+    Since this operation virtually flattens the manifold, this means that the Euclidean distance between two points in the manifold, after being stretched, is as close to the theoretical geodesic distance as it can be. Since this takes no approximation in order to find the real distance along a manifold, Isomap can be seen as an approximation to MVU.
+    
+    The difficulty of this problem comes from its non-convexity and the inexistence of an equivalent closed-form solution. With that, this optimisation problem can be converted\footnote{The conversion calculations and constraint relaxation from the non-convex to the SDP problem can be seen in the Appendix.} into an SDP, and thus convex problem \cite{mvu}:
+    \begin{align}
+        \max_{\bm{K}} \quad & \text{trace}(\bm{K}) \\
+        \textrm{s.t.} \quad 
+            & \sum_{ij} k_{ij} = 0 \\
+            & \bm{K} \succeq 0 \\
+            & k_{ii} + k_{jj} -2k_{ij} = {\| \bm{x}_i - \bm{x}_j \|}^2 \quad , \forall{i,j}\in\bm{G},
+    \end{align}
+    where the $\bm{K}\in\mathbb{R}^{n\times n}$ matrix and subsequently $k_{ij}\in\mathbb{R}$ represent the inner product between each the $i$-th and $j$-th points.
+
+    When the solution is reached, the value of $\bm{K}$ is the learned kernel, which this process can be viewed as. After having the final problem's matrix, the dataset is virtually linearised,
+    %and a linear method can be applied to reduce the dimensionality of the data set with minimal loss of information. A regular eigenvalue decomposition over the Gram matrix $\bm{K}$ can be then processed, as in Eq: \ref{eigenvalue decomposition}, to reach the reduced space.
+    and so a regular eigenvalue decomposition can be performed as in Eq. \ref{eigenvalue decomposition} have a representation in the embedded space with minimal loss of information.
+
+    As analysed in \cite{cube}, MVU presents a computational complexity of $O((nk)^3)$, i.e. the computational expenses grow cubically with the $n$ number of points and the $k$ number of neighbours to consider as the neighbourhood of each point, presenting a much faster growth compared to other methods. This is most influenced by the size of the Gram objective matrix, in $\mathbb{R}^{n\times n}$, of inner products between each pair of data points, and on the size of the neighbourhood to consider, creating a constraint for each pair of data points. Along with that, and common to all numerical approaches, solving the final eigenvalue problem has the computational complexity of $O(n^3)$. % Solving an SDP over a nxn semidefinite matrix is O(c n^3 + c^2 n^2 + c^3), where c=#constraints
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

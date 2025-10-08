@@ -1,0 +1,14 @@
+desktop.ini
+
+1.Literature/1.Papers/drtoolbox
+2.Development/1.Code/datasets/animalface/ # file with name too long
+2.Development/1.Code/datasets/hiva.data
+images
+
+.venv
+.testvenv
+
+cache
+*/out/
+
+*/99.Secrets

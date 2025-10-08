@@ -1,0 +1,14 @@
+% #############################################################################
+% RESUMO em Português
+% !TEX root = ../main.tex
+% #############################################################################
+% reset acronyms
+\acresetall
+
+\noindent A redução de dimensionalidade é um problema fundamental em aprendizagem automática e análise de dados, particularmente quando se lida com dados de alta dimensionalidade que frequentemente se encontram em volumes de menor dimensão. Embora métodos lineares como a \ac{PCA} sejam amplamente utilizados, falham em capturar complexas relações não lineares, presentes em muitos datasets. \ac{MVU} é uma abordagem bem estabelecida baseada em programação semidefinida para redução não linear de dimensionalidade, que preserva propriedades isométricas locais, mantendo as distâncias entre pontos vizinhos.
+
+\noindent No entanto, \ac{MVU} apresenta limitações computacionais quando aplicado em grandes datasets, e principalmente quando os dados se encontram em múltiplos volumes desconexos — onde o agrupamento natural ou irregularidades na amostragem criam conjuntos disjuntos no grafo de vizinhança. Essas desconexões tornam o \ac{MVU} inviável, visto que o problema de otimização resultante é incapaz de convergir nestas situações.
+
+\noindent Esta dissertação apresenta uma nova extensão que aborda estas limitações, o \ac{MVU-DM}. A metodologia proposta identifica primeiramente os componentes disjuntos do dataset dado, através do grafo de vizinhança, e aplica o \ac{MVU}, em separado, a cada componente para obter as representações locais. O elemento diferenciador desta extensão é a etapa global, onde são selecionados pontos representativos de cada componente, e estabelecidas conexões inter-componentes para linearizar a globalidade do dataset, preservando a estrutura intrínseca dos volumes individuais. Esta decomposição permite o processamento paralelo e torna o \ac{MVU} aplicável a datasets maiores do que previamente.
+
+\noindent Após uma avaliação experimental em datasets artificiais e naturais, ambos o \ac{MVU-DM} como o \ac{MVU} padrão superaram outros métodos comparáveis. Para além disso, os resultados mostram que a extensão não só lida eficazmente com volumes desconexos, como também melhora a qualidade das suas representações ao processar cada componente independentemente, levando a uma melhor preservação das estruturas geométricas locais. Este trabalho estabelece o \ac{MVU-DM} como uma solução prática e escalável para redução não linear de dimensionalidade em cenários envolvendo múltiplos volumes disjuntos.

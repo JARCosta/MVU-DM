@@ -1,0 +1,61 @@
+\section{Appendix}
+
+
+
+
+From the original formulation of MVU:
+\begin{align}
+    \max_{\bm{\hat{X}}} \quad & \sum_{ij} {\| \bm{\hat{x}}_i - \bm{\hat{x}}_j \|}^2 \\
+    \textrm{s.t.} \quad 
+        & {\| \bm{\hat{x}}_i - \bm{\hat{x}}_j \|}^2 = {\| \bm{x}_i - \bm{x}_j \|}^2, \forall_{i,j} \in\bm{G} \\
+        & \sum_i \bm{\hat{x}}_i = \bm{\vec{0}}
+\end{align}
+By centring data points beforehand, instead of considering the repelling force between all the points, since it is centred, all the forces would sum up to pushing each point away from the origin. The following simplification can be done:
+\begin{align}
+    \max_{\bm{\hat{X}}} \quad & \sum_i {\| \bm{\hat{x}}_i \|}^2 \\
+    \textrm{s.t.} \quad 
+        & {\| \bm{\hat{x}}_i - \bm{\hat{x}}_j \|}^2 = {\| \bm{x}_i - \bm{x}_j \|}^2, \forall_{i,j} \in\bm{G} \\
+        & \sum_i \bm{\hat{x}}_i = \bm{\vec{0}}
+\end{align}
+The decomposition of the squares reaches the following:
+\begin{align}
+    \max_{\bm{\hat{X}}} \quad & \sum_i \bm{\hat{x}}_i^\top \bm{\hat{x}}_i \\
+    \textrm{s.t.} \quad 
+        & \bm{\hat{x}}_i^\top \bm{\hat{x}}_i + 2\bm{\hat{x}}_i^\top \bm{\hat{x}}_j + \bm{\hat{x}}_j^\top \bm{\hat{x}}_j = {\| \bm{x}_i - \bm{x}_j \|}^2, \forall_{i,j} \in\bm{G} \\
+        & \sum_i \bm{\hat{x}}_i^\top \underbrace{\sum_j \bm{\hat{x}}_j}_{\bm{\vec{0}}} = 0
+\end{align}
+Then, generalizing to matricial calculations and considering $\bm{e}\in\mathbb{R}^{n\times n}$ to be the space neighbourhood matrix where $\bm{e}_i$ takes 1 at a given position if the corresponding data point is in the neighbourhood of the point at index $i$ of the dataset:
+\begin{align}
+    \max_{\bm{\hat{X}}} \quad
+        & \text{trace}\left( \bm{\hat{X}}^\top \bm{\hat{X}} \right) \\
+    \textrm{s.t.} \quad 
+        & \bm{e}_i^\top \bm{\hat{X}}^\top \bm{\hat{X}} \bm{e}_i + 2 \bm{e}_i^\top \bm{\hat{X}}^\top \bm{\hat{X}} \bm{e}_j + \bm{e}_j^\top \bm{\hat{X}}^\top \bm{\hat{X}} \bm{e}_j = {\| \bm{x}_i - \bm{x}_j \|}^2, \forall_{i,j} \in\bm{G} \\
+        & \bm{1}_n^\top \bm{\hat{X}}^\top \bm{\hat{X}} \bm{1}_n = 0
+\end{align}
+Now that the whole problem is written in order of $\bm{\hat{X}}^\top \bm{\hat{X}}$, by introducing the variable $\bm{K}\in\mathbb{R}^{n\times n}$:
+\begin{align}
+    \max_{\bm{K}, \bm{\hat{X}}} \quad
+        & \text{trace}\left(K\right) \\
+    \textrm{s.t.} \quad 
+        & \bm{e}_i^\top \bm{K} \bm{e}_i + 2 \bm{e}_i^\top \bm{K} \bm{e}_j + \bm{e}_j^\top \bm{K} \bm{e}_j = {\| \bm{x}_i - \bm{x}_j \|}^2, \forall_{i,j} \in\bm{G} \\
+        & \bm{1}_n^\top \bm{K} \bm{1}_n = 0 \\
+        & \bm{K} = \bm{\hat{X}}^\top \bm{\hat{X}}
+\end{align}
+Making sure that $\bm{K}$ is symmetric, positive semidefinite, and that its rank is greater than d, we isolate the non-convexity to the rank clause:
+\begin{align}
+    \max_{\bm{K}, \bm{\hat{X}}} \quad
+        & \text{trace}\left(K\right) \\
+    \textrm{s.t.} \quad 
+        & \bm{e}_i^\top \bm{K} \bm{e}_i + 2 \bm{e}_i^\top \bm{K} \bm{e}_j + \bm{e}_j^\top \bm{K} \bm{e}_j = {\| \bm{x}_i - \bm{x}_j \|}^2, \forall_{i,j} \in\bm{G} \\
+        & \bm{1}_n^\top \bm{K} \bm{1}_n = 0 \\
+        & \bm{K} \succeq 0 \\
+        & \text{rank} \left( \bm{K} \right) \ge d
+\end{align}
+so relaxing the problem by removing the rank clause, we conclude with the convex SDP problem.:
+\begin{align}
+    \max_{\bm{K}} \quad & \text{trace}(\bm{K}) \\
+    \textrm{s.t.} \quad 
+        & \sum_{ij} k_{ij} = 0 \\
+        & \bm{K} \succeq 0 \\
+        & k_{ii} + k_{jj} -2k_{ij} = {\| \bm{x}_i - \bm{x}_j \|}^2 \quad , \forall_{i,j}\in\bm{G}
+\end{align}

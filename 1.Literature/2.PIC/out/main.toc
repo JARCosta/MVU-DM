@@ -1,0 +1,44 @@
+\babel@toc {portuguese}{}\relax 
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Literature Review}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Convex Optimisation}{3}{subsection.2.1}%
+\contentsline {paragraph}{Convex Sets}{3}{section*.2}%
+\contentsline {paragraph}{Convex Functions}{3}{section*.3}%
+\contentsline {paragraph}{Optimisation Problem}{4}{section*.4}%
+\contentsline {subsection}{\numberline {2.2}Dimensionality Reduction}{4}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Linear Methods}{4}{subsubsection.2.2.1}%
+\contentsline {paragraph}{Principal Component Analysis (PCA)}{4}{section*.5}%
+\contentsline {paragraph}{Multidimensional Scaling (MDS)}{6}{section*.6}%
+\contentsline {paragraph}{Observations}{6}{section*.7}%
+\contentsline {subsubsection}{\numberline {2.2.2}Isomap}{7}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Locally Linear Embedding (LLE)}{7}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Laplacian Eigenmaps (LE)}{8}{subsubsection.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.5}Hessian Locally Linear Embedding (H-LLE)}{9}{subsubsection.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.6}Local Tangent Space Analysis (LTSA)}{9}{subsubsection.2.2.6}%
+\contentsline {subsubsection}{\numberline {2.2.7}t-distributed Stochastic Neighbour Embedding (t-SNE)}{10}{subsubsection.2.2.7}%
+\contentsline {subsubsection}{\numberline {2.2.8}Kernel PCA (K-PCA)}{11}{subsubsection.2.2.8}%
+\contentsline {subsubsection}{\numberline {2.2.9}Maximum Variance Unfolding (MVU)}{11}{subsubsection.2.2.9}%
+\contentsline {section}{\numberline {3}Related Work}{12}{section.3}%
+\contentsline {section}{\numberline {4}Proposed Approach}{13}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Problem Specification}{13}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Solution Specification}{13}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Methodology}{14}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Algorithms}{14}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Datasets}{14}{subsubsection.4.3.2}%
+\contentsline {paragraph}{Swiss Roll}{14}{section*.8}%
+\contentsline {paragraph}{Broken Swiss Roll}{14}{section*.9}%
+\contentsline {paragraph}{Helix}{15}{section*.10}%
+\contentsline {paragraph}{Twinpeaks}{15}{section*.11}%
+\contentsline {paragraph}{High-Dimensional}{15}{section*.12}%
+\contentsline {paragraph}{Teapots}{15}{section*.13}%
+\contentsline {paragraph}{MNIST}{15}{section*.14}%
+\contentsline {paragraph}{UMIST}{15}{section*.15}%
+\contentsline {subsubsection}{\numberline {4.3.3}Metrics}{15}{subsubsection.4.3.3}%
+\contentsline {paragraph}{$1$-NN Classifier Error}{15}{section*.16}%
+\contentsline {paragraph}{Trustworthiness}{15}{section*.17}%
+\contentsline {paragraph}{Continuity}{15}{section*.18}%
+\contentsline {subsubsection}{\numberline {4.3.4}Experimental Setup}{16}{subsubsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.4}Work Schedule}{16}{subsection.4.4}%
+\contentsline {section}{Bibliography}{17}{figure.caption.19}%
+\contentsline {section}{\numberline {A}Appendix}{19}{appendix.A}%

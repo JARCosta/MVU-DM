@@ -1,0 +1,49 @@
+\subsection{Work Schedule}
+
+In this section we describe the work plan leading to the elaboration of a master's thesis.
+
+\begin{figure}[htbp]
+    \begin{center}
+        \begin{ganttchart}[y unit title=0.4cm,
+            y unit chart=0.5cm,
+            x unit=0.49cm,
+            vgrid,hgrid, 
+            title label anchor/.style={below=-1.6ex},
+            title left shift=.05,
+            title right shift=-.05,
+            title height=1,
+            progress label text={},
+            bar height=0.7,
+            group right shift=0,
+            group top shift=.6,
+            group height=.3]{1}{22}
+            %labels
+            \gantttitle{Dissertation (2025)}{22} \\
+            \gantttitle{Feb}{4}
+            \gantttitle{Mar}{4}
+            \gantttitle{Apr}{4}
+            \gantttitle{May}{4}
+            \gantttitle{Jun}{4}
+            \gantttitle{Jul}{2} \\
+            %tasks
+            \ganttbar{Dataset collection}{1}{1} \\
+            \ganttbar{Methods implementation}{2}{2} \\
+            \ganttbar{Literature study}{3}{6} \\
+            \ganttbar{Solution implementation}{7}{8}
+            \ganttbar{}{10}{10}
+            \ganttbar{}{12}{12} \\
+            \ganttbar{Result assessment}{9}{9}
+            \ganttbar{}{11}{11}
+            \ganttbar{}{13}{13} \\
+            \ganttbar{Document elaboration}{14}{22}
+        \end{ganttchart}
+    \end{center}
+\caption{Gantt chart}
+\label{fig:gantt}
+\end{figure}
+
+After having acquired the datasets, we plan to setup an initial implementation for the base methods and test them against existing implementations (e.g., those in the manifold learning package of Sklearn \cite{scikit-learn}).
+
+We will dedicate some time to studying approaches that can be taken and consider if there are any other alternative implementations to test. From that study, we plan to put our original approach into practice and any alternative solution we may find, alternating between their implementation and the analysis of the results achieved, hopefully leading to iterative improvement.
+
+After testing all the approaches considered, we will write a master's thesis about the study done.

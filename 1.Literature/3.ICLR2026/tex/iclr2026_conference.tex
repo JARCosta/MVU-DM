@@ -1,0 +1,787 @@
+
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2026_conference,times}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+\usepackage{hyperref}
+\usepackage{url}
+
+% Our packages
+\usepackage{comment}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\newlength{\colheight}
+\setlength{\colheight}{0.22\textheight} % adjust to taste
+% optional: tighten spacing between subcaptions
+%\captionsetup[subfigure]{font=small,labelformat=empty,justification=centering}
+%\DeclareMathOperator{\R}{\mathbb{R}}
+%\newcommand{\bm}[1]{\boldsymbol{#1}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator{\I}{\mathbb{I}}
+
+
+\title{Maximum Variance Unfolding \\ on Disjoint Manifolds}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+\author{Antiquus S.~Hippocampus, Natalia Cerebro \& Amelie P. Amygdale \thanks{ Use footnote for providing further information
+about author (webpage, alternative address)---\emph{not} for acknowledging
+funding agencies.  Funding acknowledgements go at the end of the paper.} \\
+Department of Computer Science\\
+Cranberry-Lemon University\\
+Pittsburgh, PA 15213, USA \\
+\texttt{\{hippo,brain,jen\}@cs.cranberry-lemon.edu} \\
+\And
+Ji Q. Ren \& Yevgeny LeNet \\
+Department of Computational Neuroscience \\
+University of the Witwatersrand \\
+Joburg, South Africa \\
+\texttt{\{robot,net\}@wits.ac.za} \\
+\AND
+Coauthor \\
+Affiliation \\
+Address \\
+\texttt{email}
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+%\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+An assumption underlying much of machine learning is that observed data are often sampled from a manifold of much lower dimension than the data space itself. While linear methods such as PCA can often be used to perform dimensionality reduction, they fail to capture nonlinear relationships in the data, which are often present in natural datasets. Maximum variance unfolding is an established and well-studied neighborhood graph-based method for nonlinear dimensionality reduction with the unique property of retaining strong local isometry. However, its applicability on real-world data is limited due to its dependence on the connectivity of the underlying neighborhood graph: in natural datasets, data are often multimodal and lie on disjoint manifolds, giving rise to clusters of points that are distant in the data space. In this work, we present a method that extends MVU to the common case where data lie on disjoint manifolds. We show that it decreases both computation time and memory requirements, and that it improves performance in standard metrics that assess the extent to which the local structure of the data is preserved.
+\end{abstract}
+
+
+
+\section{Introduction}
+
+Dimensionality reduction is a vast research field with the fundamental goal of transforming high-dimensional data into a lower-dimensional representation that captures its intrinsic structure. This is related to the manifold assumption, whereby we expect that data are sampled from distributions whose support lies on (or close to) a manifold embedded in the data space \citep{manifold-hypothesis}.
+
+Despite being widely used as a preprocessing step in machine learning tasks, linear methods for dimensionality reduction, such as principal component analysis (PCA) \citep{pca}, are inadequate for capturing nonlinear relationships in the data. While PCA seeks to find a linear subspace that minimizes the reconstruction error of the data points, methods for nonlinear dimensionality reduction generalize this idea to smooth, nonlinear, and lower-dimensional geometries, i.e., manifolds. This is done by constructing a neighborhood graph, where each data point is connected to its $k$-nearest neighbors. Each method then specifies a different problem resulting in embeddings with different properties, e.g., Isomap \citep{isomap} maps data to a lower dimension while preserving geodesic distances approximated by shortest paths along the neighborhood graph.
+
+Due to their ability to recover nonlinear structure in data, and even in the age of deep learning techniques, nonlinear dimensionality reduction methods are used across many domains and applications including the study of industrial \citep{smvu-process}, chemical \citep{molecular-kinetics}, and biological processes \citep{nldr-chemotaxis}, brain imaging data \citep{dr-bid}, sentiment analysis \citep{nldr-sentiment-analysis}, remote sensing \citep{remote-sensing}, facial recognition \citep{facial-recognition}, and semi-supervised learning \citep{atlas,ss-isomap}.
+
+Maximum variance unfolding (MVU) \citep{mvu} is a well-studied \citep{mvu-fastest-mixing-mp,ghojogh-1,ghojogh-2} method for nonlinear dimensionality reduction which attempts to pull data points apart, effectively "unfolding" them onto the embedding space. MVU has some ineresting properties: unlike kernel-based methods (e.g., kernel PCA \citep{kpca}), it does not require specifying a kernel, and can directly learn the intrinsic structure of the underlying manifold. In some applications, it may be difficult to find an appropriate kernel; e.g., \citet{mvu-process-monitoring} show that MVU significantly outperforms kernel PCA in industrial process control. Furthermore, MVU is unique among its peers in that it provides local isometry guarantees. In certain applications, this is a requirement, e.g., \citet{mvu-localization-network} use MVU for sensor localization and robotic dispersion problems. Finally, unlike most other methods for nonlinear dimensionality reduction, MVU is immune to the so-called ``repeated eigendirection problem'', whereby eigenvectors of embedding Jacobians are harmonics of previous ones \citep{nldr-chemotaxis,manifold-learning-whathowwhy}. This is because of MVU's variance maximization objective, which works as a repulsion mechanism which does not allow for the collapse of intrinsic data dimensions.
+    
+%\textcolor{brown}{Although NG-based NLDR methods are highly effective at preserving local properties, their application is challenging in scenarios where data is sampled from disjoint manifolds or is sparsely distributed. In these common cases, the neighborhood graph constructed from connecting each point to its k-nearest neighbors may consist of multiple disconnected components. For instance, if two clusters are very distant, it would require an excessively large value of k to connect them, a practice that, as we will discuss, can degrade the method's ability to focus on local geometry. Conversely, a disconnected graph renders many NG-based NLDR procedures ill-defined or produces distorted results.}
+    
+%\textcolor{brown}{To address this significant challenge, there is a clear need for dimensionality reduction methods that are robust to datasets of varying density and multiple disconnected components. While some prior work has attempted to solve this issue—for example, by directly adding connections between disjoint components or simplifying the input data into a smaller set of reference points—a principled and generalizable solution is still lacking for many methods.}
+    
+%\textcolor{brown}{In this study, we propose a novel extension to Maximum Variance Unfolding (MVU), a valuable nonlinear dimensionality reduction method, to address its inapplicability to datasets with disconnected neighborhood graphs. This work is motivated by the fact that such data structures emerge naturally in real-world applications where data points are either sampled from multiple manifolds or from sparsely sampled regions of a single manifold. The subsequent sections of this proposal will present the theoretical background of dimensionality reduction, analyze the limitations of existing methods, and detail the specific methodology for our proposed extension to MVU.}
+    
+%\textcolor{brown}{\textit{
+%        This study is expected to contribute to the field of machine learning by providing a novel, theoretically grounded method for dimensionality reduction on disjoint manifolds. The findings may reveal the effectiveness and limitations of extending the MVU framework and could have significant implications for the analysis of complex, high-dimensional datasets in various domains. The proposed approach is expected to lead to more effective visualizations and improved performance in subsequent machine learning tasks, such as clustering and classification, where the integrity of individual data manifolds is critical. This research will provide not only a new tool but also a theoretical framework for understanding and addressing a long-standing challenge in nonlinear dimensionality reduction.
+%}}
+
+% \cite{large-scale-manifold-learning} Nystrom for out-of-sample extension
+
+% t-SNE emphasizes clustering without preserving true distances
+
+
+MVU has been successfully used in many applications and types of data. \citet{mvu-intro} use MVU to recover a $2D$ representation of $60,000$-dimensional text co-occurrence statistics and show that semantic relationships between words are preserved. \citet{mcu-bimodal} develop an extension to MVU which allows it to learn from bimodal data such as EEG-fMRI data and image-text pairs. \citet{mcu-regression} use MVU for regression in process optimization. Finally, \citet{colored-mvu,smvu-process,smvu} develop supervised variants of MVU.
+
+However, MVU has two main drawbacks: most importantly, it cannot be applied to data which form a disconnected neighborhood graph. These graphs arise naturally in the common case where data lie on multiple disjoint manifolds (e.g., multimodal data) or simply due to sampling irregularities. Secondly, MVU is computationally expensive, and applying it to datasets with thousands of samples may be prohibitive. In this paper, we propose a simple solution to address the first problem, which involves computing MVU embeddings for disjoint graph components separately, and afterwards reconstructing their global structure. By allowing for parallel computing of MVU on disjoint components, our method also greatly alleviates the second problem, which we demonstrate later. \footnote{We will provide all the software used to obtain the results presented in this paper as soon as deanonimyzation is allowed.}
+
+The rest of the paper is organized as follows: in Section \ref{sec:background}, we present MVU and derive its convex relaxation which is used in practice. We also present some of its notable extensions which are relevant for our problem. We present our method in Section \ref{sec:proposed-approach}, and describe and discuss an extensive experimental evaluation in Section \ref{sec:evaluation}. We discuss our findings in Section \ref{sec:results} and conclude with some closing remarks in Section \ref{sec:conclusion}.
+
+\section{Background}\label{sec:background}
+    
+\subsection{Maximum Variance Unfolding}\label{sec:mvu}
+
+Maximum variance unfolding (MVU) \citep{mvu} is a method for nonlinear dimensionality reduction which solves the problem of "unfolding" the data manifold by spreading points in the target space while maintaining local isometry.
+
+Given data $\bm{X}=\{\bm{x}_i\}_{i=1}^N, \bm{x}_i\in\R^D$, we state:
+\begin{align}
+\max_{\bm{y}_{1},\dotsc,\bm{y}_{N}} \quad & \sum_{k=1}^{N}\norm{\bm{y}_{i}}_{2}^{2}\\
+\textrm{s.t.} \quad & \norm{\bm{y}_{i}-\bm{y}_{j}}_{2}^{2}=\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2},\quad i\sim j\label{eq:mvu-isometry-orig}\\
+\quad & \sum_{i=1}^{N}\bm{y}_{i}=\bm{0}\label{eq:mvu-zerocenter}
+\end{align}
+
+The objective encodes our wish to spread the data as much as possible in the target space, i.e., to maximize the variance of the embeddings $\bm{y}_1,\dotsc,\bm{y}_N\in\R^{d}$. With $i\sim j$ indicating a $k$-nearest neighborhood relationship between the $i$-th and $j$-th points, the constraint in \eqref{eq:mvu-isometry-orig} specifies that distances between neighbors in the target space should be equal to the original distances between those same points. Finally, a centering constraint is enforced in \eqref{eq:mvu-zerocenter}. This is necessary because if the data were not centered in the target space, the points could be taken indefinitely far away from the origin, maximizing variance but leading to an unbounded problem.
+
+Note that the problem as stated is not convex: the objective consists of maximizing a quadratic function. Furthermore, the bilinear terms on the left hand side of constraint \eqref{eq:mvu-isometry-orig} define a quadratic equality on the decision variables, which does not, in general, define a convex set. We can, however, reach a convex version of this problem through the substitution $\bm{K}=\bm{Y}^\top\bm{Y}\in\R^{N\times N}$ (intermediate steps and further details can be found in the Appendix):
+\begin{align}
+\max_{\bm{K}} \quad & \text{tr}(\bm{K})\\
+\textrm{s.t.} \quad & \bm{K}_{ii}-2\bm{K}_{ij}+\bm{K}_{jj}=\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2},\quad i\sim j\label{eq:mvu-isometry-k}\\
+\quad & \bm{K} \succeq 0,\label{eq:mvu-sdp-k}\\
+\quad & \sum_{i=1}^{N}\sum_{j=1}^{N}\bm{K}_{ij}=0.\label{eq:mvu-sumzero-k}
+\end{align}
+
+%Now, the objective consists of maximizing a linear function, constraints \ref{eq:mvu-isometry-k} and \ref{eq:mvu-sumzero-k} are linear, and constraint \ref{eq:mvu-sdp-k} requires that $\bm{K}$ be semidefinite positive, making this problem one of semidefinite programming (SDP), which is convex.
+
+The SDP in MVU is solved using interior point methods, whose per-iteration computational complexity is $O((kN)^3)$ and the memory requirement is $O((kN)^2)$ \citep{sdp-solve}. This cost is prohibitive for datasets with more than a few thousand samples, where convergence may take a long time or the data may not fit in memory at all, making MVU difficult to apply to real world data.
+
+% In section 7.4 of the dimensionality review, they mention that it is reported in the literature that nonlinear methods perform badly. Prove them wrong
+
+% Reference 139 mentions an improvement on MVU for speed? Check out
+
+\subsection{Extensions to MVU}\label{sec:mvu-extensions}
+
+An issue with all neighborhood graph-based methods for nonlinear dimensionality reduction is that they fail when neighborhood graphs are not connected, i.e., when disconnected components arise from the $k$-nearest neighbor selection. In the case of MVU, if there are disjoint components, the problem becomes unbounded as components could be taken arbitrarily far away from the origin, increasing variance to infinity.
+
+A simple solution to this is the one employed in \citet{dr-review}: starting with the largest component, we find the component that's closest to it and create a connection between the closest points in each component. Those are now considered only one component, and this process is repeated until the neighborhood graph is connected. Another solution proposed for dealing with this limitation, called the enhanced neighborhood graph (ENG), was proposed by \citet{eng}.
+
+Finally, some extensions may be used to alleviate the computational burden of MVU. The Nyström approximation \citep{nystrom} is a low-rank matrix approximation used on kernel methods. It can be applied to MVU on disjoint components by embedding the largest component as usual, and projecting the rest of the data points using a Gaussian kernel. Landmark MVU \citep{landmark-mvu} embeds a set of randomly sampled points, so-called ``landmarks'', and computes the embeddings for the remaining points as linear combinations of the landmarks. However, by ignoring local structure, both of these methods sacrifice the strong local isometry guarantees of MVU.
+
+\section{Maximum Variance Unfolding on Disjoint Manifolds}\label{sec:proposed-approach}
+
+In this section, we describe our method in detail, which we summarize in pseudocode in Algorithm \ref{alg:mvudm}. We provide a notation (glossary? variable index?) table in Appendix TODO. The steps of our algorithm, given data $\bm{X}\in\R^{N\times D}$ and hyperparameter $k\in\R$, are as follows:
+
+\begin{algorithm}[tb]
+\caption{Maximum variance unfolding on disjoint manifolds}
+\label{alg:mvudm}
+\textbf{Input}: $\bm{X}\in\R^{(n\times D)}$ \\
+\textbf{Hyperparameter}: $k\in\R$\\
+\textbf{Output}: $\bm{Y}\in\R^{(N\times d)}$
+\begin{algorithmic}[1] %[1] enables line numbers
+\STATE $\mathcal{X}_1,\dotsc,\mathcal{X}_C \leftarrow $ build\_neighborhood\_graph$(\bm{X}, k)$
+\STATE $\bm{Y}_1,\dotsc,\bm{Y}_C \leftarrow $ MVU$(\bm{X}, \mathcal{X}_c),\quad p=1,\dotsc,C$
+\STATE $\mathcal{Z}_1,\dotsc,\mathcal{Z}_C \leftarrow $ choose\_representative\_points$(\bm{Y}_p),\quad p=1,\dotsc,C$
+\STATE $\mathcal{L} \leftarrow $ choose\_intercomponent\_connections$(\bm{X}, \{\mathcal{X}_p\}_{p=1}^{C})$
+\STATE $\bm{Z}_1\dotsc,\bm{Z}_C \leftarrow $ global\_MVU$(\bm{X},\{\mathcal{X}_p\}_{p=1}^{C},\bm{Y},\{\mathcal{Z}_p\}_{p=1}^{C}, \mathcal{L})$
+\STATE $\bm{Y}_1,\dotsc,\bm{Y}_C \leftarrow $ translate\_components$(\bm{Y}_p,\mathcal{Z}_p),\quad p=1,\dotsc,C$
+\STATE \textbf{Return} $[\bm{Y}_1\quad\cdots\quad\bm{Y}_C]$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{enumerate}
+    \item A neighborhood graph is built based on the $k$-nearest neighbors of each point. The components are then found by simply starting a breadth-first search on unvisited nodes until all nodes have been visited. The indices of the points that belong to each component are collected into sets $\mathcal{X}_1,\dotsc,\mathcal{X}_C$, where $C$ is the number of components. Note that: \begin{itemize}
+        \item The above definition implies $\mathcal{X}_p\cap\mathcal{X}_q=\varnothing,p\neq q,p,q=1,\dotsc,C$ (components are disjoint) and $\cup_{p=1}^C \mathcal{X}_p = [N]$ (the union of components is a collection of the indices of all the data points).
+        \item The number of components varies for the choice of $k$. The smaller the value of this hyperparameter, the larger the amount of components, and vice versa. We can always set the number of components to $1$ by choosing a sufficiently large $k$.
+    \end{itemize}
+    \item Maximum variance unfolding (MVU) is applied to each component separately, yielding embedded data $\bm{Y}_p\in\R^{|\mathcal{X}_p|\times d_p}$. Importantly, these computations can be done in parallel, since no intercomponent connections are considered at this time. We note that the dimensionality of the computed embeddings $d_p$ depends on the intrinsic dimensionality of the corresponding manifold: like MVU, we retain the top eigenvalues of $\bm{K}$ which preserve some percentage of the variance in the original data. Furthermore, each component $\bm{Y}_p$ is zero-centered, and not yet in its final position.
+    \item For each embedded component $\bm{Y}_p$, a set of "representative points" $\mathcal{Z}_p$ is chosen. The goal of this step is to choose a subset of the points of each embedded component that is a good estimate of its global geometry. We experiment with two methods for this selection, which we detail in Section \ref{sec:representative-points}. In either case, the number of representative points selected for each component is twice the dimensionality of that component, i.e., $|\mathcal{Z}_p|=2d_p$. We can generally expect the number of representative points to be much smaller than the size of the component, i.e., $2d_p<<|\mathcal{X}_p|$.
+    \item Connections are created between components until the neighborhood graph is connected. This is done in the same way as described in Section \ref{sec:mvu} for vanilla MVU: we find the largest component and the component closest to it, create a connection between the closest points between those two components, and treat them as a single component. This is done iteratively until the neighborhood graph is connected. Creating these connections amounts to saving the indices of the points that share a connection in pairs, for use in the next step. The points of each component that are selected as part of intercomponent connections are also added to the set of representative points of the respective components. This step is done in the sample space and could be performed earlier in the algorithm, but we present it here since it is related to the next step.
+    \item We perform a final "global MVU" on the representative points of each component: we preserve isometry between all representative points of a component (intracomponent connections) and the connections created in the previous step (intercomponent connections). This step takes the representative points of the zero-centered components $\bm{Y}_p$, given by the corresponding index subsets $\mathcal{Z}_p$, and puts them in their final location, yielding $\bm{Z}_p\in\R^{|\mathcal{Z}_p|\times d}$. To ensure that all components have the same embedding dimensionality, we add dimensions (zeroes) when required such that $d=\max d_p,\ p=1,\dotsc,C$ before this step.
+    \item The remaining points of each component $\bm{Y}_p$ are translated to their positions relative to the representative points of that component $\bm{Z}_p$. This is done by representing the points in homogeneous coordinates and computing an affine transformation matrix.
+
+    It is guaranteed that, in the linearized global MVU, there are the same or more dimensions to define each component, assuring no loss of information. Then, we can compute an affine transformation that takes the representative points from each component into the global MVU. Subsequently, the results obtained from applying each transformation to its respective component are aggregated.
+
+
+\end{enumerate}
+
+Further details about the computations used in our method can be found in the Appendix. We explain the need and method for selecting representative points of a component in Section \ref{sec:representative-points}, and the "global MVU" step in greater detail in Section \ref{sec:global-mvu}.
+
+\subsection{Choosing Sets of Representative Points}\label{sec:representative-points}
+
+After embedding the components separately, the goal is to translate each of them to their final position in the target space; this is done in the final three steps of the algorithm. However, performing the "global MVU" step on all the points would partly defeat the purpose of embedding each component separately, as optimizing the entire Gramian would incur the computational and memory requirements described in Section \ref{sec:mvu}.
+
+Instead, we propose working with only a small subset of the points in each component. We would like the chosen subset to be a good approximation of the structure formed by the points of each component. Since embedded components are unfolded to their maximum variance, we can expect the convex hull defined by the extrema along their principal directions to be a good approximation of that structure. This is illustrated in Figure \ref{fig:representative-points}.
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{0.32\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/1a.paralell.original.0.pdf}%
+    \caption{Component in the data space $\R^3$}
+    \label{fig:representative-points-orig}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/1b.paralell.linearised.0.pdf}%
+    \caption{Component unfolded in $\R^2$}
+    \label{fig:representative-points-embedded}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.32\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/1c.paralell.linearised.representative.0.pdf}%
+    \caption{Representative points}
+    \label{fig:representative-points-selected}
+  \end{subfigure}
+  \caption{Illustration of the process of selecting representative points of a component. (a) Component in ambient (data) space, (b) Embedded component and principal directions, (c) Selected representative points and their connections highlighted.}
+  \label{fig:representative-points}
+\end{figure}
+
+Thus, our procedure to select the representative subset of each component is to represent its points in terms of its principal components (computed through SVD, which is computationally cheap), and select the indices of the points which are the maxima and minima along each principal direction. Given an embedded component of dimension $d_p\in\mathbb{N}$, we have $|\mathcal{Z}_p|=2d_p$. However, recall that points selected as part of intercomponent connections (step $4$) are also added to the set of representative points of a component.
+
+\subsection{Global MVU} \label{sec:global-mvu}
+
+Having selecting the representative subset of each component, we choose which intercomponent connections to keep as described in step $4$. We also need to make sure that all embedded components have the same dimensionality; to this end, we add zero-filled dimensions as required such that $d_p\leftarrow\max \{d_q, q=1,\dotsc,C\}, p=1,\dotsc,C$, that is, all embedded components have the same dimensionality as the embedded component with highest dimensionality.
+
+% DON'T FORGET TO EXPLAIN WHY K=2 IN INTERCOMPONENT CONNECTIONS
+
+% DON'T FORGET TO SAY THAT WE MANAGE TO IMPROVE PERFORMANCE \& GENERALLY KICK ASS WITHOUT APPLYING TRICKS LIKE ADAPTIVE NEIGHBOURHOOD SELECTION AND SHIT
+% -> ALSO NO NEW HYPERPARAMETERS
+
+% DON'T FORGET TO SAY THE PERCENTAGE OF VARIANCE WE'RE RETAINING IN MVU AND BASED MVU
+
+We can now formulate our "global MVU" step, which is illustrated in Figure \ref{fig:global-mvu}:
+\begin{align}
+    \max_{\bm{z}_{1,1},\dotsc,\bm{z}_{p,|\mathcal{Z}_{p}|}\in\R^{d_p}} \quad& \sum_{p=1}^{C}\sum_{i=1}^{|\mathcal{Z}_p|} \norm{\bm{z}_{p,i}}_2^2\label{eq:global-mvu-obj}\\
+    \textrm{s.t.} \quad& \norm{\bm{z}_{p,i}-\bm{z}_{p,j}}_{2}^{2}=\norm{\bm{y}_{p,i}-\bm{y}_{p,j}}_{2}^{2},\quad p=1,\dotsc,C; \ i,j\in\mathcal{Z}_{p}\label{eq:global-mvu-intra}\\
+    \quad& \norm{\bm{z}_{p,i}-\bm{z}_{q,j}}_{2}^{2}=\norm{\bm{x}_{p,i}-\bm{x}_{q,j}}_{2}^{2},\quad (\bm{x}_{p,i},\bm{x}_{q,j})\text{ i.c. connections}\label{eq:global-mvu-inter}\\
+    \quad& \sum_{p=1}^{C}\sum_{i=1}^{|\mathcal{Z}_p|}\bm{z}_{p,i}=\bm{0}\label{eq:global-mvu-zerocenter}
+\end{align}
+
+The objective (Equation \ref{eq:global-mvu-obj}) is the same as in vanilla MVU: to maximize the variance. However, in this case, we are only spreading out the set of representative points of all components. Equation \ref{eq:global-mvu-intra} defines intracomponent isometry constraints: all distances between points in each set of representative points should be kept. Finally, Equation \ref{eq:global-mvu-inter} defines intercomponent isometry constraints based on the connections selected in step $4$. Note that in these constraints, isometry is with respect to the distances in the original data space. As usual, we zero-center the solution to avoid unboundedness. We note that the problem as stated is not convex, but turning it into a convex problem is done in the same manner as for MVU (cf. Section \ref{sec:mvu}).
+
+\begin{figure}[t]
+\vspace{-10mm}
+  \centering
+  % three subfigures side-by-side, each approx 0.32 of the column width
+  \begin{subfigure}[b]{0.33\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/2a.paralell.original.pdf}%
+    \caption{Components in the data space $\R^3$}
+    \label{fig:global-mvu-orig}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.24\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/2b.paralell.linearised.representative.0.pdf}
+    \vspace{-12mm}
+    \label{fig:global-mvu-c1}
+    %\vspace{2mm} % space between the stacked images
+    \includegraphics[width=\linewidth]{images/2b.paralell.linearised.representative.1.pdf}
+    \vspace{-10mm}
+    \caption{Each component is embedded separately}
+    \label{fig:global-mvu-c2}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.39\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/2c.paralell.linearised.representative.pdf}
+    \vspace{-20mm}
+    \caption{Global MVU is applied}
+    \vspace{-12mm}
+    \includegraphics[width=\linewidth]{images/2d.paralell.linearised.representative.pdf}
+    \vspace{-19mm}
+    \caption{Local MVU are positioned}
+    \label{fig:global-mvu-itself}
+  \end{subfigure}
+  \caption{Illustration of the "global MVU" step. (a) Two components in ambient (data) space, (b) Each component is embedded separately, and their representative subsets are computed, (c) Global MVU is applied, retaining both intercomponent connections and distances between all representative points within the same component, (d) The remaining points of each component are translated to their final positions.}
+  \label{fig:global-mvu}
+\end{figure}
+
+
+\section{Evaluation} \label{sec:evaluation}
+
+In this section, we describe in detail the experimental evaluation performed to validate our method. We start by enumerating the methods we test in our benchmarks in Section \ref{sec:methods}. Then, we present a diverse set of both artificial and natural datasets in Section \ref{sec:datasets}, which we use to benchmark our methods. We evaluate the performance of all methods on all datasets according to the metrics described in Section \ref{sec:metrics}.
+
+\subsection{Methods} \label{sec:methods}
+
+In addition to comparing our method, which we call maximum variance unfolding on disjoint manifolds (MVU-DM), with vanilla MVU \citep{mvu}, we consider the following representative methods for nonlinear dimensionality reduction: kernel PCA (KPCA) \citep{kpca}, Laplacian eigenmaps (LE) \citep{le}, locally linear embedding (LLE) \citep{lle}, Hessian locally linear embedding (HLLE) \citep{hlle}, Isomap \citep{isomap}, and local tangent space alignment \citep{ltsa} (LTSA). We also add the enhanced neighborhood graph (ENG) \citep{eng} to Isomap, which performed best in their experiments.
+
+Despite being the most commonly used method for data visualization, t-SNE \citep{tsne} is expected to perform poorly in our benchmarks as it emphasizes clustering over preserving distances between points. As such, we exclude it from our experiments.
+
+\subsection{Datasets} \label{sec:datasets}
+
+We include a variety of both artificial and natural datasets with varying global structures, scales, and intrinsic dimensionalities. We describe them here on a high level, and leave a presentation of all the details to the Appendix.
+
+\subsubsection{Artificial Datasets} \label{sec:datasets-artificial}
+
+We considered all datasets from \citet{dr-review} and \citet{eng}. However, we excluded the fully connected datasets for not fitting the objective of this study. Additionally, we exclude the Broken Swiss Roll dataset since it is largely redundant when compared with the Broken S-curve dataset in terms of their properties.
+
+The selection of artificial datasets we use focuses on evaluating the way each method relates components that were found disconnected from the neighborhood graph. So, we consider the Broken S-curve (BSC) dataset, consisting of 4 sections of a bent 2D manifold forming a 3D 'S' structure. We utilized two variations of the Swiss Roll: one consists of two distinct Swiss rolls separated by an arbitrary distance (SR1), while the other features two non-colliding Swiss rolls placed adjacent to each other (SR2). The last synthetic dataset considered is the Four Moons (FM) dataset which consists of two pairs of C-shaped manifolds. Each pair is composed of a smaller manifold nested within a larger one, with the two pairs positioned parallel to each other.
+
+All of these artificial datasets were generated with 2000 points, to which we added Gaussian noise with variance $0.05$. Formulas for their generation and illustrations may be found in the appendix.
+
+\subsubsection{Natural Datasets} \label{sec:datasets-natural}
+
+We used all the disconnected natural datasets from \citet{dr-review} and \citet{eng}. The COIL20 dataset consists of 1440 single-channel $(128\times 128)$ photos of 20 different objects, taken from varying angles of rotation. ORL is a 400-photo dataset of faces from 40 distinct subjects, from different angles, with $(112\times 92)$ resolution. The MIT-CBCL dataset also consists of photos of subjects' faces taken from different angles. It comprises 2059 $(64\times64)$ photos. Additionally, the Olivetti dataset comprises the same original data as the ORL dataset; however, it was treated and is made available by scikit-learn. Although they have the same images, they are 64 by 64 pixels.
+
+\subsection{Metrics} \label{sec:metrics}
+
+We follow \citet{dr-review} and assess all methods according to the quality of their embeddings with respect to $1$-nearest neighbor classification performance (cf. \citet{1-nn}), trustworthiness, and continuity \citep{t&c}. These metrics evaluate to what extent the local structure of the data is preserved in the embeddings.
+
+The $1$-nearest neighbor classifier error is the percentage of points whose closest neighbor in the embedding space is of a different class than in the original space \citep{1-nn}. Classes are assigned to points according to hypercubes defined in the data space.
+
+The trustworthiness and continuity assess how well neighborhoods around each point are preserved in the embedding space \citep{t&c}. For the $i$-th point, $\mathcal{U}_i^k$ is the set of its $k$-nearest neighbors in the embedding space. With $j$ its $r(i,j)$-nearest neighbor in the input space, trustworthiness is given by:
+\begin{equation}
+T(k)=1- \frac{2}{Nk(2N-3k-1)}\sum_{i=1}^{N}\sum_{j\in\mathcal{U}_{i}^{k}} \max(0,r(i,j)-k)
+\end{equation}
+
+We can think of $r(i,j)$ as a ranking: a list, ordered by distance, of the neighbors of $i$ in the original space. Then, since $\mathcal{U}_i^k$ is the set of neighbors of $i$ in the embedding space, trustworthiness penalizes "intrusions" into the set of nearest neighbors after embedding.
+
+Analogously, if we define $\mathcal{V}_i^k$ as the set of the $k$-nearest neighbors of $i$ in the original space, and $\hat{r}(i,j)$ as the ranking of $j$ in terms of nearest-neighbors of $i$ in the embedding space, we get the metric of continuity, which measures how many neighbors of $i$ in the data space are no longer its neighbors in the embedding space:
+\begin{equation}
+C(k)=1- \frac{2}{Nk(2N-3k-1)}\sum_{i=1}^{N}\sum_{j\in\mathcal{V}_{i}^{k}} \max(0,\hat{r}(i,j)-k)
+\end{equation}
+
+\section{Discussion} \label{sec:results}
+
+Our results corroborate those on the seminal analysis by \citet{dr-review}: MVU is often among the best performing methods, particularly on the artificial datasets. In those scenarios, our method tended to improve performance over the baseline MVU. However, improvements were even more robust in the natural datasets, where our proposed MVU-DM achieved some of the best results.
+
+Besides generally improving performance over MVU, we find that our method significantly speeds up execution. We present speedups of MVU-DM over vanilla MVU in Table \ref{tab:speedup} for different values of $k$.
+
+%Alongside the studies \citet{dr-review} and \cite{eng} we found that, although not frequently the best in practice, the MVU showed a promising theoretical basis. It is visible, however, that the extension proposed in this paper achieved better results on many occasions. Due to the individual linearisation of each component, it is possible that, although the global MVU tries to separate the different components, the inter-component connections are not long enough to fully separate. This happening is would be most common on natural datasets, but it showed in some artificial datasets, however.
+
+%Aside from the unexpected performance from the KPCA, the methods alternated between the most adequate for each task. While the MVU did not distinguish itself particularly, our proposed extension further improved its results, in general.
+
+%The developed extension to MVU proved to be a great improvement in execution time and also memory utilization. By splitting the linearisation into multiple independent processes, this extension reduces the number of data oints per fractional method, meaning that the computational expense will be exponentially cheaper in time and memory.
+
+%Depending on the nature of the disconnections, the processing will fall between well-balanced components or into a principal computation with multiple simpler, smaller processes. We found that on synthetic datasets the computation time was 4 to 12 times faster, while on natural datasets, it averaged at around 2.5 times faster.
+
+\begin{table}[t]
+\caption{1-NN results (Smaller values are better)}
+\label{tab:1NN}
+\begin{center}
+\begin{tabular}{l|c|c|c|c||c|c|c|c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c}{Natural Datasets} \\
+                     & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\
+\hline
+Isomap            & 6.50\% & 15.30\% & 9.15\% & \textbf{0.00\%} & 5.83\% & 11.25\% & 1.60\% & 18.25\% \\
+Isomap+ENG            & 13.10\% & 15.15\% & 8.70\% & 4.95\% & 7.36\% & 11.75\% & 1.65\% & 18.25\% \\
+LLE            & \textbf{4.15\%} & 26.75\% & 26.45\% & \textbf{0.00\%} & 7.43\% & 9.00\% & 1.70\% & 14.75\% \\
+HLLE            & 5.20\% & \textbf{7.55\%} & 8.05\% & 0.10\% & 7.29\% & 25.75\% & 2.43\% & 20.50\% \\
+LE            & 5.05\% & 32.15\% & 32.25\% & 1.05\% & 10.35\% & 13.25\% & 1.99\% & 31.00\% \\
+LTSA            & 9.20\% & 11.90\% & \textbf{7.55\%} & 0.15\% & 7.01\% & 25.75\% & 2.38\% & 37.25\% \\
+K-PCA            & 50.45\% & 26.75\% & 16.85\% & \textbf{0.00\%} & 5.83\% & \textbf{4.00\%} & \textbf{1.41\%} & 13.25\% \\
+\hline
+MVU            & 6.70\% & 13.35\% & 13.10\% & \textbf{0.00\%} & 5.69\% & 10.75\% & 1.89\% & 14.50\% \\
+MVU-DM            & 4.85\% & 9.20\% & 9.75\% & 2.65\% & \textbf{4.38\%} & 6.25\% & 1.94\% & \textbf{8.25\%} \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[t]
+\caption{Trustworthiness results (Larger values are better)}
+\label{tab:trustworthiness}
+\begin{center}
+\begin{tabular}{l|c|c|c|c||c|c|c|c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c}{Natural Datasets} \\
+                     & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\
+\hline
+Isomap            & 99.18\% & 98.05\% & 99.76\% & 99.10\% & 99.09\% & 98.69\% & 99.67\% & 97.16\% \\
+Isomap+ENG            & 98.01\% & 98.12\% & 99.93\% & 97.27\% & 98.26\% & 98.46\% & 99.42\% & 97.16\% \\
+LLE            & \textbf{99.53\%} & 94.81\% & 94.92\% & 99.17\% & 97.99\% & 95.86\% & 99.06\% & 91.16\% \\
+HLLE            & 98.85\% & 99.81\% & 99.95\% & 98.68\% & 97.91\% & 90.73\% & 99.06\% & 88.92\% \\
+LE            & 98.94\% & 93.76\% & 93.69\% & 99.72\% & 98.56\% & 98.20\% & 99.73\% & 94.03\% \\
+LTSA            & 97.58\% & 99.41\% & \textbf{99.96\%} & 98.39\% & 96.98\% & 90.73\% & 99.20\% & 88.52\% \\
+K-PCA            & 92.90\% & 92.19\% & 89.41\% & \textbf{100.00\%} & \textbf{99.43\%} & \textbf{99.37\%} & \textbf{99.90\%} & \textbf{98.45\%} \\
+\hline
+MVU            & 97.99\% & 98.44\% & 97.32\% & 98.64\% & 97.86\% & 97.54\% & 99.33\% & 97.03\% \\
+MVU-DM            & 99.50\% & \textbf{99.90\%} & 99.70\% & 97.62\% & 99.10\% & 98.10\% & 99.10\% & 98.30\% \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[t]
+\caption{Continuity results (Larger values are better)}
+\label{tab:continuity}
+\begin{center}
+\begin{tabular}{l|c|c|c|c||c|c|c|c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c}{Natural Datasets} \\
+                     & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\
+\hline
+Isomap            & \textbf{99.85\%} & 99.55\% & 99.91\% & 99.55\% & \textbf{99.80\%} & 99.68\% & 99.87\% & 99.41\% \\
+Isomap+ENG            & 99.60\% & 99.55\% & \textbf{99.95\%} & 99.60\% & 99.64\% & 99.66\% & 99.77\% & 99.37\% \\
+LLE            & 98.49\% & 99.40\% & 99.40\% & 98.68\% & 99.14\% & 97.30\% & 99.31\% & 92.47\% \\
+HLLE            & 95.70\% & 95.69\% & 95.80\% & 93.50\% & 98.76\% & 94.86\% & 98.60\% & 88.65\% \\
+LE            & 96.86\% & 99.40\% & 99.35\% & 80.30\% & 99.06\% & 99.16\% & 99.63\% & 96.80\% \\
+LTSA            & 87.55\% & 93.10\% & 95.59\% & 93.82\% & 99.11\% & 94.86\% & 98.52\% & 88.65\% \\
+K-PCA            & 99.28\% & 98.78\% & 98.03\% & \textbf{100.00\%} & \textbf{99.80\%} & 99.48\% & \textbf{99.91\%} & 99.12\% \\
+\hline
+MVU            & 99.24\% & 99.58\% & 99.76\% & 99.45\% & 99.73\% & \textbf{99.71\%} & 99.82\% & 99.59\% \\
+MVU-DM            & 99.80\% & \textbf{99.90\%} & 99.80\% & 99.21\% & \textbf{99.80\%} & 99.70\% & 99.80\% & \textbf{99.70\%} \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+\begin{table}[t]
+\caption{Time speedup of MVU-DM compared to MVU for different values of $k$}
+\label{tab:speedup}
+\begin{center}
+\begin{tabular}{l|c|c|c|c||c|c|c|c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{c||}{Artificial Datasets} & \multicolumn{4}{c}{Natural Datasets} \\
+     & BSC & SR1 & SR2 & FM & COIL20 & ORL & MIT-CBCL & Olivetti \\ \hline
+    $k=5$ & 6.69 & 3.24 & 2.43 & 6.10 & 4.02 & 1.15 & 7.96 & 0.55 \\ \hline
+    $k=10$ & 12.18 & 6.40 & 6.61 & 12.81 & 3.03 & 1.09 & 4.54 & 1.23 \\ \hline
+    $k=15$ & 11.13 & 4.14 & 5.67 & 15.94 & 1.59 & 1.09 & 2.48 & 1.39 \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\section{Conclusion} \label{sec:conclusion}
+
+We introduced a new method for applying MVU to data that lie on disjoint manifolds, or which display a disconnected neighborhood graph for any reason. Our experiments on a variety of both artificial and natural datasets show that its ability to preserve local structure is at least as good as that of MVU, while both improving its efficiency and increasing its applicability to disconnected neighborhood graphs. Furthermore, our method does not require any additional hyperparameters to vanilla MVU, making it more adequate for cross-validation.
+
+\subsubsection*{Acknowledgments}
+This work was partly funded by the Foundation of Science and Technology through scholarship 2024.04726.BD.
+
+\subsubsection*{Reproducibility statement}
+
+We have prepared a codebase with all the software necessary to reproduce the experiments in this paper. This includes all the nonlinear dimensionality methods used in the experiments, all extensions, metrics, and datasets.
+
+\newpage
+
+\newpage
+
+\newpage
+
+\bibliography{iclr2026_conference}
+\bibliographystyle{iclr2026_conference}
+
+\newpage
+
+\appendix
+
+\section{Methods for Nonlinear Dimensionality Reduction}\label{app:nldr}
+
+Practically all methods for nonlinear dimensionality reduction use neighborhood graphs, which are built by connecting each point to its $k$-nearest neighbors according to some metric (usually the Euclidean distance). The idea is that while it is difficult to define some global objective for how points should be arranged in the embedding space, we can use information about the local structure around each data point. Many methods for nonlinear dimensionality reduction involve finding, for some data $\{\bm{x}_i\}_{i=1}^N\in\R^D$, embeddings $\{\bm{y}_i\}_{i=1}^N\in\R^d$ with $d<<D$ such that:
+\begin{align}
+\min_{\bm{y}_1,\ldots,\bm{y}_{N}} \sum_{i=1}^{N}\sum_{j=1}^{N} (d(\bm{x}_i, \bm{x}_j) - \|\bm{y}_i - \bm{y}_j\|_2)^2
+\end{align}
+If we set $d(\cdot,\cdot)$ to be the Euclidean distance, we recover classical multidimensional scaling, a linear method for dimensionality reduction that is equivalent to PCA \cite{mds}.
+
+\subsection{Isomap}
+
+Isomap \citep{isomap} is a particular formulation of classical multidimensional scaling \citep{mds}, which we repeat here:
+\begin{align}
+\min_{\bm{y}_1,\ldots,\bm{y}_{N}} \sum_{i=1}^{N}\sum_{j=1}^{N} (d(\bm{x}_i, \bm{x}_j) - \|\bm{y}_i - \bm{y}_j\|_2)^2
+\end{align}
+
+Given a dataset $\{\bm{x}_i\}_{i=1}^N\in\R^D$, the above expresses our wish to find embeddings $\{\bm{y}_i\}_{i=1}^N\in\R^d$ such that some distance $d(\cdot,\cdot)$ is maintained between all points when embedded. In particular, Isomap constructs a $k$-neighborhood graph, from which it computes shortest-path distances $\Delta_{ij}$ between each pair of points. These distances correspond to approximate geodesics along the data manifold, and can be computed with Dijsktra's \citep{dijkstra} or Floyd-Warshall's \citep{floyd-warshall} algorithms.
+
+Isomap \citep{isomap} builds a distance matrix of approximated geodesics between all points, where geodesics are estimated as shortest-distance paths across the neighborhood graph. Then, it minimizes the above objective where $d(\bm{x}_i,\bm{x}_j)$ is the approximated geodesic distance $\Delta_{ij}$ between the $i$-th and $j$-th points.
+
+However, we may also perform Isomap in closed form. We can retrieve the inner product matrix, i.e., the Gramian of the embedded data from $\Delta_{ij}$ via "double-centering":
+\begin{align}
+    \bm{K}=-\frac{1}{2}(\I - \frac{1}{n}\bm{ee}^{\top})\bm{\Delta}^{2}(\I - \frac{1}{n}\bm{ee}^{\top}),
+\end{align}
+with $\bm{e}=[1,\dotsc,1]^{\top}\in\R^{n}$. Then, from the eigendecomposition of  $\bm{K}=\bm{Q\Lambda Q}^{\top}$, we recover the embeddings:
+\begin{align}
+    \bm{Y}=\sqrt{\bm{\Lambda}_{d}}\bm{Q}_{d}^{\top},
+\end{align}
+where $\bm{\Lambda}_{d}$ and $\bm{Q}_{d}^{\top}$ contain the $d$ largest eigenvalues and eigenvectors respectively.
+
+\subsection{Locally Linear Embedding}
+
+While Isomap tries to preserve geodesic distances globally across the manifold, locally linear embedding (LLE) \citep{lle} attempts to preserve only local properties of the data. By assuming that the $k$-neighborhood $\mathcal{N}_i^k$ around each point $\bm{x}_i$ lies on a linear patch of the manifold, LLE starts by defining each (high-dimensional) point as a linear combination of its $k$-nearest neighbors and finding the corresponding reconstruction weights $W\in\R^{D\times D}$:
+\begin{align}
+    \min_{W} \quad &\sum_i^N\norm{\bm{x}_i-\sum_{j}w_{ij}\bm{x}_j}_2^2,i\sim j\\
+    \text{s.t.} \quad & \sum_{j=1}^N w_{ij} = 1,\quad i=1,\dotsc,N
+\end{align}
+where $i\sim j$ indicates a nearest-neighbor relation.
+
+Then, the goal is to find projections $\{\bm{y}_{i}\}_{i=1}^{N}\in\R^d$ such that each projected point can be reliably computed as a linear combination of its $k$-nearest neighbors in the original space using the reconstruction weights above. We can then formulate the LLE objective:
+\begin{align}
+    \min_{\bm{y}_{i}} \quad & \sum_{i}\norm{\bm{y}_{i} - \sum_{j}w_{i,j}\bm{y}_{i,j}}_{2}^{2}
+\end{align}
+
+\subsection{Hessian LLE}
+
+Hessian LLE (HLLE) \citep{hlle} extends LLE by computing a global Hessian matrix describing the manifold's curvature, and minimizing it. This matrix is computed from the factorization of each local patch around a data point into principal directions. After merging these and a column of ones, this output is orthogonalised in a Gram-Schmidt manner to estimate the Local Hessian.
+
+Finishing by applying the eigenvalue decomposition on the estimated Hessian matrix $\mathcal{H}$:
+\begin{align}
+    \mathcal{H} \bm{\alpha} = \lambda \bm{\alpha}
+\end{align}
+and selecting the $d$ smallest eigenvalues and their associated eigenvectors, to define the reduced space. 
+
+
+% can't say the thing below I think
+%Hessian LLE (HLLE) \citep{hlle} extends LLE by using the Hessian of the local reconstruction function rather than the reconstruction weights, which helps preserving local geometry in manifolds with significant curvature.
+
+\subsection{Laplacian Eigenmaps}
+
+Laplacian Eigenmaps (LE) \citep{le} compute edge weights $w_{ij}$ between $k$-nearest neighbors using the Gaussian kernel function:
+\begin{equation}
+    w_{i,j} = e^{-\frac{\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2}}{2\sigma^{2}}},\quad i\sim j
+\end{equation}
+
+Since larger weights $w_{ij}$ correspond to smaller distances in the original space, we try to put points that are nearby in the data space as close as possible in the embedding space:
+\begin{align}
+\min_{\bm{y}_{i}} \quad & \sum_{i,j}w_{i,j}\norm{\bm{y}_{i} - \bm{y}_{j}}_{2}^{2},\quad i\sim j
+\end{align}
+
+\subsection{Local Tangent Space Alignment}
+
+Local Tangent Space Alignment (LTSA) \citep{ltsa} aligns local tangent spaces to preserve the local geometric structure. For each point, it computes a local tangent space using PCA on its neighborhood, then finds a global embedding that best aligns these local tangent spaces. The global tangent space matrix is $\bm{B}$ built iteratively:
+\begin{equation}
+    \bm{B}_{\mathcal{N}_i\mathcal{N}_i} = \bm{B}_{\mathcal{N}_{i-1}\mathcal{N}_{i-1}} + \bm{J}_k(\bm{I} - \bm{V}_i\bm{V}_i^\top)\bm{J}_k,
+\end{equation}
+where $\mathcal{N}_i$ define the neighborhood indexes of $i$, and $\bm{J}_k(\bm{I} - \bm{V}_i\bm{V}_i^\top)\bm{J}_k$ is the double centered PCA projections $\bm{V}_i\bm{V}_i^\top$. 
+
+%t-distributed stochastic neighbor embedding (t-SNE) \citep{sne,tsne} converts distances between data points into conditional probabilities which, intuitively, reflect how "likely" it is that one point would pick the other as a neighbor. Then, it minimizes the Kullback-Leibler divergence between the joint probabilities of the embedding and original data via gradient descent.
+
+\subsection{Kernel PCA}
+
+Finally, we mention kernel PCA (KPCA) \citep{kpca}, which does not rely on neighborhood graphs. Instead, the user picks a kernel function $k(\bm{x}_i,\bm{x}_j)$ with which the data points are mapped to a higher-dimensional feature space, where PCA is applied. Embeddings are found by solving an eigenvalue problem:
+\begin{align}
+\bm{K} \bm{\alpha} = \lambda \bm{\alpha}
+\end{align}
+where $\bm{K}$ is the kernel matrix with entries $k_{ij} = k(\bm{x}_i, \bm{x}_j)$.
+
+
+\begin{comment}
+Isomap \citep{isomap} builds a distance matrix of approximated geodesics between all points, where geodesics are estimated as shortest-distance paths across the neighborhood graph. Then, it minimizes the above objective where $d(\bm{x}_i,\bm{x}_j)$ is the approximated geodesic distance between the $i$-th and $j$-th points.
+
+
+Without a well-described mapping of relations between points, the task of capturing the alternating stiffness along a dataset becomes more difficult. Therefore, practically all methods for nonlinear dimensionality reduction use neighborhood graphs \citep{manifold-learning-whathowwhy}. And so, there are fundamental characteristics that can separate them further into different subtypes of methods.
+
+Depending on the objective function, the same optimization problem can focus on different details. Moreover, multiple frequently applied methods derive from the general formulation of Multidimensional Scaling, as is Isomap.
+
+\textbf{Isomap} \citep{isomap} extends multidimensional scaling (MDS) to nonlinear manifolds by approximating geodesic distances through shortest paths on the neighborhood graph. Given data points $\bm{X}=\{\bm{x}_i\}_{i=1}^N, \bm{x}_i\in\R^D$, Isomap constructs a neighborhood graph where each point is connected to its $k$-nearest neighbors. The shortest path distance through the neighborhood approximates the geodesic distance between any two points. The embedding $\bm{Y} =\{\bm{y}_i\}_{i=1}^N, \bm{y}_i\in\R^d$ is then found by applying classical MDS to preserve these geodesic distances, solving:
+\begin{align}
+\min_{\bm{y}_1,\ldots,\bm{y}_{N}} \sum_{i=1}^{N}\sum_{j=1}^{N} (d(\bm{x}_i, \bm{x}_j) - \|\bm{y}_i - \bm{y}_j\|_2)^2
+\end{align}
+where $d(\bm{x}_i, \bm{x}_j)$ denotes the shortest path distance in the neighborhood graph.
+
+This method is solved in a closed form by building a double-centered dissimilarity matrix, from the approximation of the geodesic distance between each pair of input points, and applying an eigenvalue decomposition on it, selecting the $d$ largest eigenvalues and their related eigenvectors.
+
+\textbf{Locally Linear Embedding (LLE)} \citep{lle} assumes that each data point and its neighbors lie on a locally linear patch of the manifold. The method first finds reconstruction weights $W_{ij}$ that minimize:
+\begin{align}
+\sum_{i=1}^N \left\|\bm{x}_i - \sum_{j \in \mathcal{N}_i} W_{ij} \bm{x}_j\right\|_2^2
+\end{align}
+subject to $\sum_{j \in \mathcal{N}_i} W_{ij} = 1$, where $\mathcal{N}_i$ denotes the neighborhood of point $i$. The embedding coordinates are then found by preserving these local linear relationships:
+\begin{align}
+\min_{\bm{y}_1,\ldots,\bm{y}_N} \sum_{i=1}^N \left\|\bm{y}_i - \sum_{j \in \mathcal{N}_i} W_{ij} \bm{y}_j\right\|_2^2
+\end{align}
+
+\textbf{Hessian Locally Linear Embedding (HLLE)} \citep{hlle} extends LLE by using the Hessian of the local reconstruction function instead of the reconstruction weights, providing better preservation of local geometry for manifolds with significant curvature.
+
+\textbf{Laplacian Eigenmaps (LE)} \citep{le} seeks to preserve local neighborhood information by minimizing distances between nearby points in the embedding space. The method constructs a weighted adjacency matrix $W$ where $W_{ij} = \exp(-\|\bm{x}_i - \bm{x}_j\|_2^2/\sigma^2)$ for neighboring points, and finds the embedding by solving the generalized eigenvalue problem:
+\begin{align}
+\bm{L} \bm{v} = \lambda \bm{D} \bm{v}
+\end{align}
+where $\bm{L} = \bm{D} - \bm{W}$ is the graph Laplacian and $\bm{D}$ is the diagonal degree matrix. The embedding coordinates are given by the eigenvectors corresponding to the smallest non-zero eigenvalues.
+
+\textbf{Local Tangent Space Alignment (LTSA)} \citep{ltsa} aligns local tangent spaces to preserve the local geometric structure. For each point, it computes a local tangent space using PCA on its neighborhood, then finds a global embedding that best aligns these local tangent spaces.
+
+
+\textbf{Kernel Principal Component Analysis (KPCA)} \citep{kpca} generalizes PCA to nonlinear settings by mapping data to a higher-dimensional feature space using a kernel function, then applying linear PCA in that space. The embedding is found by solving the eigenvalue problem:
+\begin{align}
+\bm{K} \bm{\alpha} = \lambda \bm{\alpha}
+\end{align}
+where $\bm{K}$ is the kernel matrix with entries $K_{ij} = k(\bm{x}_i, \bm{x}_j)$ for some kernel function $k$.
+\end{comment}
+
+\section{Convex MVU}\label{app:convex-mvu}
+In this Section we derive a convex version of MVU from the original formulation, which we reiterate:
+
+\begin{align}
+\max_{\bm{y}_{1},\dotsc,\bm{y}_{N}} \quad & \sum_{i=1}^{N}\norm{\bm{y}_{i}}_{2}^{2}\\
+\textrm{s.t.} \quad & \norm{\bm{y}_{i}-\bm{y}_{j}}_{2}^{2}=\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2},\quad i\sim j\label{eq-app:mvu-isometry-orig}\\
+\quad & \sum_{i=1}^{N}\bm{y}_{i}=\bm{0}\label{eq-app:mvu-zerocenter}
+\end{align}
+
+Again, we not that this is not a convex problem since the objective is a maximization of a convex function and the constrain encoded in \ref{eq-app:mvu-isometry-orig} does not, in general, define a convex set. Expanding the squared terms:
+
+\begin{align}
+\max_{\bm{y}_{1},\dotsc,\bm{y}_{n}} \quad & \sum_{i=1}^{n}\bm{y}_{i}^{\top}\bm{y}_{i}\\
+\textrm{s.t.} \quad & \bm{y}_{i}^{\top}\bm{y}_{i} - 2 \bm{y}_{i}^{\top}\bm{y}_{j} + \bm{y}_{j}^{\top}\bm{y}_{j} =\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2},\quad i\sim j\\
+\quad & \sum_{i,j=1}^{n}\bm{y}_{i}^{\top}\bm{y}_{j}=0
+\end{align}
+
+By collecting the embedded points into the columns of a matrix $\bm{Y}=\begin{bmatrix}\bm{y}_{1} & \cdots & \bm{y}_{n}\end{bmatrix}\in\R^{d\times N}$, we can rewrite the problem:
+
+\begin{align}
+\max_{\bm{Y}} \quad & \text{tr}(\bm{Y}^{\top}\bm{Y})\\
+\textrm{s.t.} \quad & \bm{e}_{i}^{\top}\bm{Y}^{\top}\bm{Y}\bm{e}_{i} - 2 \bm{e}_{i}^{\top}\bm{Y}^{\top}\bm{Y}\bm{e}_{j} + \bm{e}_{j}^{\top}\bm{Y}^{\top}\bm{Y}\bm{e}_{j} =\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2},\quad i\sim j\\
+\quad & \bm{1}^{\top}\bm{Y}^{\top}\bm{Y}\bm{1} = 0,
+\end{align}
+where $\bm{e}_i$ is a "selection" or "one-hot" vector, i.e., its elements are all zero except for the element at the $i$-th index, which is $1$. Note that, now, the whole problem depends on $\bm{Y}^\top\bm{Y}$, so we introduce a new variable $\bm{K}=\bm{Y}^{\top}\bm{Y}\in\R^{N\times N}$ to linearize the terms that depend on $\bm{Y}^\top\bm{Y}$:
+
+\begin{align}
+\max_{\bm{K},\bm{Y}} \quad & \text{tr}(\bm{K})\\
+\textrm{s.t.} \quad & \bm{e}_{i}^{\top}\bm{K}\bm{e}_{i} - 2 \bm{e}_{i}^{\top}\bm{K}\bm{e}_{j} + \bm{e}_{j}^{\top}\bm{K}\bm{e}_{j} =\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2},\quad i\sim j\\
+\quad & \bm{1}^{\top}\bm{K}\bm{1} = 0\\
+\quad & \bm{K} = \bm{Y}^{\top}\bm{Y}
+\end{align}
+
+Because $\bm{K}=\bm{Y}^{\top}\bm{Y}$ defines an inner product matrix, we can replace that constraint if we make sure that $\bm{K}$ is both symmetric, positive semidefinite and that the rank of $\bm{K}$ is not greater than the dimension of the $\bm{y}_i$s:
+
+\begin{align}
+\max_{\bm{K}} \quad & \text{tr}(\bm{K})\\
+\textrm{s.t.} \quad & \bm{e}_{i}^{\top}\bm{K}\bm{e}_{i} - 2 \bm{e}_{i}^{\top}\bm{K}\bm{e}_{j} + \bm{e}_{j}^{\top}\bm{K}\bm{e}_{j} =\norm{\bm{x}_{i}-\bm{x}_{l}}_{2}^{2},\quad i\sim j\\
+\quad & \bm{1}^{\top}\bm{K}\bm{1} = 0\\
+\quad & \bm{K}\succeq 0\\
+\quad & \text{rk}(\bm{K}) \leq n
+\end{align}
+
+Now, the only nonconvexity in the problem is given by the rank constraint. If we remove it, we arrive at a convex relaxation of the original problem, which is the final formulation of MVU:
+
+\begin{align}
+\max_{\bm{K}} \quad & \text{tr}(\bm{K})\\
+\textrm{s.t.} \quad & \bm{e}_{i}^{\top}\bm{K}\bm{e}_{i} - 2 \bm{e}_{i}^{\top}\bm{K}\bm{e}_{j} + \bm{e}_{j}^{\top}\bm{K}\bm{e}_{j} =\norm{\bm{x}_{i}-\bm{x}_{j}}_{2}^{2},\quad i\sim j\\
+\quad & \bm{1}^{\top}\bm{G}\bm{1} = 0\\
+\quad & \bm{K}\succeq 0
+\end{align}
+
+Here, $\bm{K}\in\R^{N\times N}$ is a Gramian (or inner product) matrix, so that maximizing its trace corresponds to maximizing the variance of the data in the target space.
+
+\section{Datasets}\label{app:datasets}
+
+\subsection{Artificial Datasets}
+
+In the following datasets we use a small Gaussian perturbation $\epsilon\in\mathcal{N}(0,0.05)$ added to the generated data points:
+
+
+
+\textbf{Broken S-curve}
+
+The dataset is defined by: 
+\begin{align}
+t_0 \sim \mathcal{U}\left(-\frac{3\pi}{2}, -\frac{3\pi}{2} + 0.4\pi\right) \\
+t_1 \sim \mathcal{U}\left(-\frac{3\pi}{2} + 0.6\pi, -\frac{3\pi}{2} + 1.4\pi\right) \\
+t_2 \sim \mathcal{U}\left(-\frac{3\pi}{2} + 1.6\pi, -\frac{3\pi}{2} + 2.4\pi\right) \\
+t_3 \sim \mathcal{U}\left(-\frac{3\pi}{2} + 2.6\pi, -\frac{3\pi}{2} + 3.0\pi\right) \\
+t \in \{t_0, t_1, t_2, t_3\} \\
+h \sim \mathcal{U}(0, 2) \\
+\mathbf{X} = \begin{bmatrix}
+\sin(t) \\
+h \\
+\text{sign}(t) \cdot (\cos(t) - 1)
+\end{bmatrix} + \epsilon
+\end{align}
+
+\textbf{Parallel Swiss Rolls}
+
+Defining a raw Swiss Roll:
+\begin{align}
+t \sim \mathcal{U}\left(\frac{3\pi}{2}, 3\pi\right) \\
+ h \sim \mathcal{U}(0, 30) \\
+ \mathbf{X}^{\text{(raw)}} = \begin{bmatrix}
+t \cos(t) \\
+h \\
+t \sin(t)
+\end{bmatrix} + \epsilon, \\
+\\
+\end{align}
+
+the dataset consists of:
+\begin{align}
+    \mathbf{X}_2 = \mathbf{X}^{\text{(raw)}} + \begin{bmatrix} 0 \\ 60 \\ 0 \end{bmatrix} \\
+    \mathbf{X} = \mathbf{X}^{\text{(raw)}} \cup \mathbf{X}_2
+\end{align}
+
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{0.25\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/appendix/2a.broken.s_curve.original.pdf}%
+    \caption{Broken S-curve}
+    \label{fig:representative-points-orig}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.25\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/appendix/2a.parallel.swiss.original.pdf}%
+    \caption{Parallel Swiss Roll}
+    \label{fig:representative-points-embedded}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.25\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/appendix/2a.two.swiss.original.pdf}%
+    \caption{Arbitrary Swiss Rolls}
+    \label{fig:representative-points-selected}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.25\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/appendix/2a.four.moons.original.pdf}%
+    \caption{Four Moons}
+    \label{fig:representative-points-selected}
+  \end{subfigure}
+  \caption{Visual representation of the synthetic datasets used.}
+  \label{fig:representative-points}
+\end{figure}
+
+\newpage
+
+\textbf{Arbitrary Swiss Rolls}
+
+Alongside the last, using the same original datasets:
+\begin{align}
+t \sim \mathcal{U}\left(\frac{3\pi}{2}, 3\pi\right) \\
+ h \sim \mathcal{U}(0, 30) \\
+ \mathbf{X}^{\text{(raw)}} = \begin{bmatrix}
+t \cos(t) \\
+h \\
+t \sin(t)
+\end{bmatrix} + \epsilon, \\
+\\
+\end{align}
+
+
+we apply the transformation:
+\begin{align}
+\mathbf{R} = \begin{bmatrix}
+\cos(-\pi/4) & -\sin(-\pi/4) & 0 \\
+\sin(-\pi/4) & \cos(-\pi/4) & 0 \\
+0 & 0 & 1
+\end{bmatrix} \\
+\mathbf{X}_1 = \mathbf{R} \mathbf{X}^{\text{(raw)}} + \begin{bmatrix} 20 \\ 20 \\ 30 \end{bmatrix},
+\end{align}
+and define the dataset as:
+\begin{align}
+    \mathbf{X}_2 = \mathbf{X}^{\text{(raw)}} + \begin{bmatrix} 0 \\ -20 \\ 0 \end{bmatrix} \\
+    \mathbf{X} = \mathbf{X}_1 \cup \mathbf{X}_2
+\end{align}
+
+\textbf{Four Moons}
+
+Defining a raw pair of moons as:
+\begin{align}
+    t \sim \mathcal{U}(0, \pi) \\
+\mathbf{X}_1 = \begin{bmatrix}
+0 \\
+\sin(t) \\
+\cos(t)
+\end{bmatrix} + \epsilon\\
+\mathbf{X}_2 = \begin{bmatrix}
+0 \\
+\frac{1-\sin(t)}{4} \\
+\frac{-\cos(t)}{4}
+\end{bmatrix} + \epsilon\\
+    \mathbf{X}^{\text{(raw)}} = \mathbf{X}_1 \cup \mathbf{X}_2,
+\end{align}
+
+the full dataset is defined:
+\begin{align}
+    \mathbf{X} = \mathbf{X}^{\text{(raw)}} \cup \left( \mathbf{X}^{\text{(raw)}} + \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}\right)
+\end{align}
+
+%\subsection{Natural Datasets}
+
+
+\begin{comment}
+    
+\section{Computation Details}\label{app:computation-details}
+
+\subsection{Translating Components to their Final Positions}
+%Homogeneous coordinates/wtv we did
+
+\color{brown}
+In order to apply the global MVU, all the representative points have to be represented in the same number of dimensions. To do this, we add null dimensions to all local MVU's embedding that don't match the dimensions of the one with maximum number of them.
+
+After applying the global MVU on the representative points, and since there is one component whose reference points are defining a volume that is limiting the minimum dimension possible, the output dimension is limited in the lower bound by the maximum number of dimensions from each component.
+
+It is guaranteed that, in the linearized global MVU, there will be the same or more dimensions to define each component, assuring no loss of information. Then, we can compute an affine transformation that takes the representative points from each component into the global MVU. This transformation can be represented as a set of translation, rotation, and scaling. It is calculated as a simple $aX+b=Y$ equation, where $a$ and $b$ define the transformation, $X$ the set of reference points in the locally linearized space, and $Y$ the set of representative points in the globally linearized set; or $T = (X')^{-1} \cdot Y$, where $x'$ is the set $X$ with an added column of ones. To finish, we stack the results from applying each transformation to its respective component.
+\color{black}
+\end{comment}
+
+\end{document}

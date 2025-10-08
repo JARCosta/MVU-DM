@@ -1,0 +1,94 @@
+\documentclass[a4paper]{article}
+
+\input{Preamble_commands}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%
+% TITLE & NAME %
+%%%%%%%%%%%%%%%%
+\selectlanguage{english}
+\title{Maximum Variance Unfolding on Disjoint Manifolds} % <-- ACTION: WRITE your project title here
+\author{João André Roque Costa}
+\istid{99088}
+\email{joaoarcosta@tecnico.ulisboa.pt}
+\advisor{Francisco Melo}
+\coadvisor{João Tomás Brazão Caldeira} 
+
+% To make the title
+\maketitle
+\thispagestyle{empty}
+
+%%%%%%%%%%%%
+% ABSTRACT %
+%%%%%%%%%%%%
+% To remove indentation before abstract
+\setlength{\abstitleskip}{-\absparindent}
+\begin{abstract}
+    Dimensionality reduction is a field in constant evolution. However, even though there are methods that excel at computing linear relation over datasets, the operation of linearising data points that relate non-linearly between them is a task that was not perfected yet.
+    %Considering different methods to different scenarios, there are cases where the present approaches perform poorly.
+    %On this study, we are going to analyse whether if it is possible for the present non-linear methods to preform accurately on datasets with vast discrepancies in data point density. More precisely, if maximum variance unfolding can preform well over disjoint manifolds.
+    In this study we assess whether a powerful non-linear dimensionality reduction method, maximum variance unfolding, can be extended to datasets that lie on disjoint manifolds.
+\keywords{Dimensionality Reduction, Non-linearity, Embedded Space, Low Dimension, Eigenvalue Decomposition}
+\clearpage
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%
+% TABLE OF CONTENTS %
+%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+\thispagestyle{empty}
+\clearpage
+
+\input{Sections/1_Introduction}
+\input{Sections/2_Literature Review}
+\input{Sections/2_Related Work}
+\input{Sections/3_Proposed Approach}
+\input{Sections/3_Work_schedule}
+\input{Sections/5_Conclusions}
+
+%%%%%%%%%%%%%%%%
+% INTRODUCTION %
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%
+% Background %
+%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+% Related work %
+%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%
+% Solution %
+%%%%%%%%%%%%
+%%%%%%%%%%%%%%
+% Evaluation %
+%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%
+% Work Schedule %
+%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+% BIBLIOGRAPHY %
+%%%%%%%%%%%%%%%%
+
+\clearpage
+% add Bibliography to TOC
+\addcontentsline{toc}{section}{\refname}
+% The following command resets the 'emphasis' style for bibliography entries
+\normalem
+% Name of your BiBTeX file
+\bibliography{Bibliography} % <-- ACTION: Put here your own filename or edit Bibliography.bib to add your references
+% The following command modifies the 'emphasis' style for bibliography entries
+\ULforem
+
+
+%%%%%%%%%%%%
+% APPENDIX %
+%%%%%%%%%%%%
+\clearpage % <-- ACTION: Comment the following blocks if you dont need appendixes
+\appendix
+\input{Sections/AppendixA.tex}
+
+%%%%%%%%%%%%%
+%    END    %
+%%%%%%%%%%%%%
+
+\end{document}

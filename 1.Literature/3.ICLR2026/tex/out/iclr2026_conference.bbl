@@ -1,0 +1,275 @@
+\begin{thebibliography}{40}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Belkin \& Niyogi(2003)Belkin and Niyogi]{le}
+Mikhail Belkin and Partha Niyogi.
+\newblock Laplacian eigenmaps for dimensionality reduction and data
+  representation.
+\newblock \emph{Neural computation}, 15\penalty0 (6):\penalty0 1373--1396,
+  2003.
+
+\bibitem[Boninsegna et~al.(2015)Boninsegna, Gobbo, No{\'e}, and
+  Clementi]{molecular-kinetics}
+Lorenzo Boninsegna, Gianpaolo Gobbo, Frank No{\'e}, and Cecilia Clementi.
+\newblock Investigating molecular kinetics by variationally optimized diffusion
+  maps.
+\newblock \emph{Journal of chemical theory and computation}, 11\penalty0
+  (12):\penalty0 5947--5960, 2015.
+
+\bibitem[Borchers \& Young(2007)Borchers and Young]{sdp-solve}
+Brian Borchers and Joseph~G Young.
+\newblock Implementation of a primal--dual method for sdp on a shared memory
+  parallel architecture.
+\newblock \emph{Computational Optimization and Applications}, 37:\penalty0
+  355--369, 2007.
+
+\bibitem[Dijkstra(2022)]{dijkstra}
+Edsger~W Dijkstra.
+\newblock A note on two problems in connexion with graphs, 2022.
+
+\bibitem[Donoho \& Grimes(2003)Donoho and Grimes]{hlle}
+David~L Donoho and Carrie Grimes.
+\newblock Hessian eigenmaps: Locally linear embedding techniques for
+  high-dimensional data.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 100\penalty0
+  (10):\penalty0 5591--5596, 2003.
+
+\bibitem[Dsilva et~al.(2018)Dsilva, Talmon, Coifman, and
+  Kevrekidis]{nldr-chemotaxis}
+Carmeline~J Dsilva, Ronen Talmon, Ronald~R Coifman, and Ioannis~G Kevrekidis.
+\newblock Parsimonious representation of nonlinear dynamical systems through
+  manifold learning: A chemotaxis case study.
+\newblock \emph{Applied and Computational Harmonic Analysis}, 44\penalty0
+  (3):\penalty0 759--773, 2018.
+
+\bibitem[Fan et~al.(2018)Fan, Chow, Zhao, and Ho]{eng}
+Jicong Fan, Tommy~WS Chow, Mingbo Zhao, and John~KL Ho.
+\newblock Nonlinear dimensionality reduction for data with disconnected
+  neighborhood graph.
+\newblock \emph{Neural Processing Letters}, 47\penalty0 (2):\penalty0 697--716,
+  2018.
+
+\bibitem[Fefferman et~al.(2016)Fefferman, Mitter, and
+  Narayanan]{manifold-hypothesis}
+Charles Fefferman, Sanjoy Mitter, and Hariharan Narayanan.
+\newblock Testing the manifold hypothesis.
+\newblock \emph{Journal of the American Mathematical Society}, 29\penalty0
+  (4):\penalty0 983--1049, 2016.
+
+\bibitem[Floyd(1962)]{floyd-warshall}
+Robert~W Floyd.
+\newblock Algorithm 97: shortest path.
+\newblock \emph{Communications of the ACM}, 5\penalty0 (6):\penalty0 345--345,
+  1962.
+
+\bibitem[Ge et~al.(2024)Ge, Zhu, Ouyang, Ashraf, Qiu, and
+  Ibrahim]{facial-recognition}
+Huilin Ge, Zhiyu Zhu, Jiali Ouyang, Muhammad~Awais Ashraf, Zhiwen Qiu, and
+  Umar~Muhammad Ibrahim.
+\newblock Integration of manifold learning and density estimation for
+  fine-tuned face recognition.
+\newblock \emph{Symmetry}, 16\penalty0 (6):\penalty0 765, 2024.
+
+\bibitem[Ghojogh et~al.(2021)Ghojogh, Ghodsi, Karray, and Crowley]{ghojogh-1}
+Benyamin Ghojogh, Ali Ghodsi, Fakhri Karray, and Mark Crowley.
+\newblock Unified framework for spectral dimensionality reduction, maximum
+  variance unfolding, and kernel learning by semidefinite programming: Tutorial
+  and survey.
+\newblock \emph{arXiv preprint arXiv:2106.15379}, 2021.
+
+\bibitem[Ghojogh et~al.(2023)Ghojogh, Crowley, Karray, and Ghodsi]{ghojogh-2}
+Benyamin Ghojogh, Mark Crowley, Fakhri Karray, and Ali Ghodsi.
+\newblock Unified spectral framework and maximum variance unfolding.
+\newblock In \emph{Elements of Dimensionality Reduction and Manifold Learning},
+  pp.\  285--312. Springer, 2023.
+
+\bibitem[Huang et~al.(2019)Huang, Zhang, and Chen]{ss-isomap}
+Rui Huang, Guopeng Zhang, and Junli Chen.
+\newblock Semi-supervised discriminant isomap with application to
+  visualization, image retrieval and classification.
+\newblock \emph{International Journal of Machine Learning and Cybernetics},
+  10\penalty0 (6):\penalty0 1269--1278, 2019.
+
+\bibitem[Kim \& Lee(2014)Kim and Lee]{nldr-sentiment-analysis}
+Kyoungok Kim and Jaewook Lee.
+\newblock Sentiment visualization and classification via semi-supervised
+  nonlinear dimensionality reduction.
+\newblock \emph{Pattern Recognition}, 47\penalty0 (2):\penalty0 758--768, 2014.
+
+\bibitem[Liu et~al.(2014)Liu, Chen, and Yao]{mvu-process-monitoring}
+Yuan-Jui Liu, Tao Chen, and Yuan Yao.
+\newblock Nonlinear process monitoring and fault isolation using extended
+  maximum variance unfolding.
+\newblock \emph{Journal of process control}, 24\penalty0 (6):\penalty0
+  880--891, 2014.
+
+\bibitem[Maaten \& Hinton(2008)Maaten and Hinton]{tsne}
+Laurens van~der Maaten and Geoffrey Hinton.
+\newblock Visualizing data using t-sne.
+\newblock \emph{Journal of machine learning research}, 9\penalty0
+  (Nov):\penalty0 2579--2605, 2008.
+
+\bibitem[Mahadevan et~al.(2011)Mahadevan, Wong, Pereira, Liu, Vasconcelos, and
+  Saul]{mcu-bimodal}
+Vijay Mahadevan, Chi Wong, Jose Pereira, Tom Liu, Nuno Vasconcelos, and
+  Lawrence Saul.
+\newblock Maximum covariance unfolding: Manifold learning for bimodal data.
+\newblock \emph{Advances in Neural Information Processing Systems}, 24, 2011.
+
+\bibitem[Meil{\u{a}} \& Zhang(2024)Meil{\u{a}} and
+  Zhang]{manifold-learning-whathowwhy}
+Marina Meil{\u{a}} and Hanyu Zhang.
+\newblock Manifold learning: What, how, and why.
+\newblock \emph{Annual Review of Statistics and Its Application}, 11\penalty0
+  (1):\penalty0 393--417, 2024.
+
+\bibitem[Pearson(1901)]{pca}
+Karl Pearson.
+\newblock Liii. on lines and planes of closest fit to systems of points in
+  space.
+\newblock \emph{The London, Edinburgh, and Dublin philosophical magazine and
+  journal of science}, 2\penalty0 (11):\penalty0 559--572, 1901.
+
+\bibitem[Pitelis et~al.(2014)Pitelis, Russell, and Agapito]{atlas}
+Nikolaos Pitelis, Chris Russell, and Lourdes Agapito.
+\newblock Semi-supervised learning using an unsupervised atlas.
+\newblock In \emph{Joint European Conference on Machine Learning and Knowledge
+  Discovery in Databases}, pp.\  565--580. Springer, 2014.
+
+\bibitem[Platt(2005)]{nystrom}
+John Platt.
+\newblock Fastmap, metricmap, and landmark mds are all nystr{\"o}m algorithms.
+\newblock In \emph{International Workshop on Artificial Intelligence and
+  Statistics}, pp.\  261--268. PMLR, 2005.
+
+\bibitem[Roweis \& Saul(2000)Roweis and Saul]{lle}
+Sam~T Roweis and Lawrence~K Saul.
+\newblock Nonlinear dimensionality reduction by locally linear embedding.
+\newblock \emph{science}, 290\penalty0 (5500):\penalty0 2323--2326, 2000.
+
+\bibitem[Sanguinetti(2008)]{1-nn}
+Guido Sanguinetti.
+\newblock Dimensionality reduction of clustered data sets.
+\newblock \emph{IEEE Transactions on pattern analysis and machine
+  intelligence}, 30\penalty0 (3):\penalty0 535--540, 2008.
+
+\bibitem[Sch{\"o}lkopf et~al.(1998)Sch{\"o}lkopf, Smola, and M{\"u}ller]{kpca}
+Bernhard Sch{\"o}lkopf, Alexander Smola, and Klaus-Robert M{\"u}ller.
+\newblock Nonlinear component analysis as a kernel eigenvalue problem.
+\newblock \emph{Neural computation}, 10\penalty0 (5):\penalty0 1299--1319,
+  1998.
+
+\bibitem[Simonetto et~al.(2012)Simonetto, Keviczky, and
+  Dimarogonas]{mvu-localization-network}
+Andrea Simonetto, Tam{\'a}s Keviczky, and Dimos~V Dimarogonas.
+\newblock Distributed solution for a maximum variance unfolding problem with
+  sensor and robotic network applications.
+\newblock In \emph{2012 50th Annual Allerton Conference on Communication,
+  Control, and Computing (Allerton)}, pp.\  63--70. IEEE, 2012.
+
+\bibitem[Song et~al.(2007)Song, Gretton, Borgwardt, and Smola]{colored-mvu}
+Le~Song, Arthur Gretton, Karsten Borgwardt, and Alex Smola.
+\newblock Colored maximum variance unfolding.
+\newblock In J.~Platt, D.~Koller, Y.~Singer, and S.~Roweis (eds.),
+  \emph{Advances in Neural Information Processing Systems}, volume~20. Curran
+  Associates, Inc., 2007.
+\newblock URL
+  \url{https://proceedings.neurips.cc/paper_files/paper/2007/file/55a7cf9c71f1c9c495413f934dd1a158-Paper.pdf}.
+
+\bibitem[Song et~al.(2024)Song, Zhang, Yang, Chen, Wang, and
+  Xu]{remote-sensing}
+Wenhui Song, Xin Zhang, Guozhu Yang, Yijin Chen, Lianchao Wang, and Hanghang
+  Xu.
+\newblock A study on dimensionality reduction and parameters for hyperspectral
+  imagery based on manifold learning.
+\newblock \emph{Sensors}, 24\penalty0 (7):\penalty0 2089, 2024.
+
+\bibitem[Sun et~al.(2006)Sun, Boyd, Xiao, and Diaconis]{mvu-fastest-mixing-mp}
+Jun Sun, Stephen Boyd, Lin Xiao, and Persi Diaconis.
+\newblock The fastest mixing markov process on a graph and a connection to a
+  maximum variance unfolding problem.
+\newblock \emph{SIAM review}, 48\penalty0 (4):\penalty0 681--699, 2006.
+
+\bibitem[Tang et~al.(2021)Tang, Chen, and Li]{dr-bid}
+Yunbo Tang, Dan Chen, and Xiaoli Li.
+\newblock Dimensionality reduction methods for brain imaging data analysis.
+\newblock \emph{ACM Computing Surveys (CSUR)}, 54\penalty0 (4):\penalty0 1--36,
+  2021.
+
+\bibitem[Tenenbaum et~al.(2000)Tenenbaum, Silva, and Langford]{isomap}
+Joshua~B Tenenbaum, Vin~de Silva, and John~C Langford.
+\newblock A global geometric framework for nonlinear dimensionality reduction.
+\newblock \emph{science}, 290\penalty0 (5500):\penalty0 2319--2323, 2000.
+
+\bibitem[Torgerson(1952)]{mds}
+Warren~S Torgerson.
+\newblock Multidimensional scaling: I. theory and method.
+\newblock \emph{Psychometrika}, 17\penalty0 (4):\penalty0 401--419, 1952.
+
+\bibitem[Van Der~Maaten et~al.(2009)Van Der~Maaten, Postma, Van Den~Herik,
+  et~al.]{dr-review}
+Laurens Van Der~Maaten, Eric~O Postma, H~Jaap Van Den~Herik, et~al.
+\newblock Dimensionality reduction: A comparative review.
+\newblock \emph{Journal of machine learning research}, 10\penalty0
+  (66-71):\penalty0 13, 2009.
+
+\bibitem[Venna \& Kaski(2006)Venna and Kaski]{t&c}
+Jarkko Venna and Samuel Kaski.
+\newblock Visualizing gene interaction graphs with local multidimensional
+  scaling.
+\newblock In \emph{The European Symposium on Artificial Neural Networks}, 2006.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:12239921}.
+
+\bibitem[Wang \& Paynabar(2023)Wang and Paynabar]{mcu-regression}
+Qian Wang and Kamran Paynabar.
+\newblock Maximum covariance unfolding regression: A novel covariate-based
+  manifold learning approach for point cloud data.
+\newblock \emph{arXiv preprint arXiv:2303.17852}, 2023.
+
+\bibitem[Wei et~al.(2016)Wei, Chen, and Song]{smvu-process}
+Chihang Wei, Junghui Chen, and Zhihuan Song.
+\newblock Developments of two supervised maximum variance unfolding algorithms
+  for process classification.
+\newblock \emph{Chemometrics and Intelligent Laboratory Systems}, 159:\penalty0
+  31--44, 2016.
+
+\bibitem[Weinberger et~al.(2005)Weinberger, Packer, and Saul]{landmark-mvu}
+Kilian Weinberger, Benjamin Packer, and Lawrence Saul.
+\newblock Nonlinear dimensionality reduction by semidefinite programming and
+  kernel matrix factorization.
+\newblock In Robert~G. Cowell and Zoubin Ghahramani (eds.), \emph{Proceedings
+  of the Tenth International Workshop on Artificial Intelligence and
+  Statistics}, volume~R5 of \emph{Proceedings of Machine Learning Research},
+  pp.\  381--388. PMLR, 06--08 Jan 2005.
+\newblock URL \url{https://proceedings.mlr.press/r5/weinberger05a.html}.
+\newblock Reissued by PMLR on 30 March 2021.
+
+\bibitem[Weinberger \& Saul(2006{\natexlab{a}})Weinberger and Saul]{mvu}
+Kilian~Q Weinberger and Lawrence~K Saul.
+\newblock Unsupervised learning of image manifolds by semidefinite programming.
+\newblock \emph{International journal of computer vision}, 70:\penalty0 77--90,
+  2006{\natexlab{a}}.
+
+\bibitem[Weinberger \& Saul(2006{\natexlab{b}})Weinberger and Saul]{mvu-intro}
+Kilian~Q Weinberger and Lawrence~K Saul.
+\newblock An introduction to nonlinear dimensionality reduction by maximum
+  variance unfolding.
+\newblock In \emph{AAAI}, volume~6, pp.\  1683--1686, 2006{\natexlab{b}}.
+
+\bibitem[Yang \& Qi(2024)Yang and Qi]{smvu}
+Deliang Yang and Hou-Duo Qi.
+\newblock Supervised maximum variance unfolding.
+\newblock \emph{Machine Learning}, 113\penalty0 (9):\penalty0 6197--6226, 2024.
+
+\bibitem[Zhang \& Zha(2004)Zhang and Zha]{ltsa}
+Zhenyue Zhang and Hongyuan Zha.
+\newblock Principal manifolds and nonlinear dimensionality reduction via
+  tangent space alignment.
+\newblock \emph{SIAM journal on scientific computing}, 26\penalty0
+  (1):\penalty0 313--338, 2004.
+
+\end{thebibliography}

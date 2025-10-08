@@ -1,0 +1,40 @@
+\section{Related Work}
+    % relacionar, ou identificar a falta dela, entre trabalhos já existentes e o problema que vamos resolver
+    % experiencias que suportam o uso do mvu e o quão util seria o mvu em disjoint manifolds? ou tmb que suportam o uso de non linear no geral sobre linear methods? ex o tal papaer do MRI que compara linear com non linear approches, no mvu mensioned in there
+
+    Landmark MVU (L-MVU) \cite{l-mvu} is an extension to MVU which facilitates its application on larger data sets. It approximates the manifold's whole structure from a subset of reference points, the \textit{landmarks}, based on the original data. It was found that many of the constraints from MVU's formulation are redundant, so another improvement from this extension is the incremental insertion of those constraints, inserting more only when the solution takes invalid values.
+
+    This extension was also proposed for related methods such as Isomap and LLE. Their landmark versions L-Isomap \cite{l-isomap, general-landmark} and L-LLE \cite{l-lle, general-landmark} result in speed improvements that allow its application to larger datasets at the cost of some precision.
+
+    However, when dealing with natural datasets, greater problems emerge. Typically, natural datasets lie on multiple or disjoint manifolds. Furthermore, data may not be well sampled from the underlying manifolds, resulting in sparse areas in the data space. Both of these result in neighbourhood graphs that are not connected. Many of the methods above either perform poorly or have undefined solutions when applied to disconnected neighbourhood graphs.
+
+    One solution to remedy this issue could be to embed a single component (e.g., the largest) and apply out-of-sample extensions to embed the others \cite{out-of-sample-1, out-of-sample-2, out-of-sample-3}. However, since out-of-extension methods rely on embedding each point as some function of other (relatively distant) points that are already embedded, it is likely that their distances in the data space are not very informative, yielding imprecise embeddings. Indeed, in practice we observe a degradation of the learned representations \cite{comparison}.
+
+    Another solution might be to simply increase the value of $k$ until the resulting neighborhood graph is connected (with $k=n$ in the limit). However, using a large number of neighbors might result in the loss of local information, so that is not a good solution in practice \cite{comparison}.
+
+    As such, \cite{inspiration} proposes adding edges between connected components of a (disconnected) graph such that the intrinsic dimensionality of the edge space is equal to that of each of the components. This is done iteratively between pairs of components until the NG becomes connected. They apply their method to LLE, H-LLE, LE, and Isomap, generally improving their abilities to perform NLDR on data lying on disjoint manifolds. However, this method has a few disadvantages:
+    \begin{itemize}
+        \item It assumes that all manifolds/connected components have the same intrinsic dimensionality.
+        \item It relies on an estimation/prior knowledge of the intrinsic dimensionality of the data.
+        \item It creates as many connections as possible between components. This is disadvantageous for methods such as MVU, where the rigidity introduced by the new edges may prevent the unfolding of the manifold.
+    \end{itemize}
+
+
+    %In practice, with the growth in size of each given dataset, some areas may appear where the distribution of data points becomes quite sparse compared to others. This, in addition to the neighbourhood graph system, can impact the method's performance. In these situations, it is possible that during the execution of the method, the representation of the data in these areas may get distorted, and in some extreme cases where the density of data points gets so lean that two different submanifolds are identified with no clear link connecting them. In these not-so-uncommon situations, disconnected neighbourhood graphs form disjoint manifolds.
+    
+    %On datasets that need those high number of connections, between data points, to keep those disjoint manifolds connected, due to the low density of points on some particular location of the manifold, or for the physical impossibility of data in between them, the MVU method doesn't perform well or can't even find a feasible solution.
+    
+    %This infeasibility is easily explained as the pulling motion that the MVU applies to the manifold. Without a connection keeping these submanifolds together, MVU separates them further into infinity. \\
+
+    %It has been seen in practice that it is not reliable to connect the dataset solely by increasing the neighbourhood on each data point given that MVU and many other methods scale with the size of the k-neighbourhood \cite{comparison}.
+    
+    %With this in mind, in \cite{inspiration}, the solution for this problem was thought for Isomap. In the same, the approach to create connections between all the disjoint components, or taking an approach to connect the largest ones were considered.
+
+    %Along with the problem of connecting the manifolds, the same problem can be thought of from another point of view. Instead of trying to connect all the components along a single manifold, another possibility is connecting them considering they take part into two distinct manifolds. In these situations, connecting them as if they made part of the same continuous manifolds could lead to misleading results. An approach to connect while accepting the differences in components is delved in \cite{modern} as an out-of-sample extension of MVU. This same approach could also take advantage of computing those multiple manifolds in parallel.
+    
+    %Multiple other extensions to MVU were also thought of in this same article \cite{modern}.
+
+    % Onde é que falo nos principais usos para o MVU? tipo que o MVU é principalmente benéfico/usado para datasets que beneficiam altamente de menores números de variaveis.
+
+    % Só no fim do rework é que me lembrei que tinhas dado a sujestão.
+    To conclude, most non-linear dimensionality reduction methods rely on building a so-called neighbourhood graph (NG) of the data, which is used to discover its underlying geometric structure. These neighbourhood graphs can be highly disconnected if data are sampled from disjoint manifolds. Linear techniques such as PCA work fine in these cases, but NG-based methods do not work in these situations either because relationships between points are undefined (e.g., Isomap, where geodesic distances can't be calculated globally) or because the problem becomes ill-defined (e.g., MVU, where the optimization becomes unbounded).

@@ -1,0 +1,364 @@
+PWD c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026
+INPUT C:\Users\jar\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\iclr2026_conference.tex
+OUTPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.log
+INPUT C:\Program Files\MiKTeX\tex\latex\base\article.cls
+INPUT C:\Program Files\MiKTeX\tex\latex\base\article.cls
+INPUT C:\Program Files\MiKTeX\tex\latex\base\size10.clo
+INPUT C:\Program Files\MiKTeX\tex\latex\base\size10.clo
+INPUT C:\Program Files\MiKTeX\tex\latex\base\size10.clo
+INPUT .\iclr2026_conference.sty
+INPUT iclr2026_conference.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\eso-pic\eso-pic.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\eso-pic\eso-pic.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\keyval.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\xcolor\xcolor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\color.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-def\pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\mathcolor.ltx
+INPUT .\fancyhdr.sty
+INPUT fancyhdr.sty
+INPUT .\natbib.sty
+INPUT natbib.sty
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb.tfm
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\times.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\times.sty
+INPUT .\math_commands.tex
+INPUT .\math_commands.tex
+INPUT math_commands.tex
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsmath.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amstext.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsgen.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsbsy.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsmath\amsopn.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amsfonts.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\bm.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\tools\bm.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
+INPUT C:\Program Files\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\hycolor\hycolor.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\hycolor\hycolor.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\nameref.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\refcount\refcount.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\refcount\refcount.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\pd1enc.def
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\puenc.def
+INPUT C:\Program Files\MiKTeX\tex\latex\url\url.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\url\url.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\bitset\bitset.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\bitset\bitset.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\hyperref\hpdftex.def
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\comment\comment.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\comment\comment.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\algorithms\algorithm.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\algorithms\algorithm.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\float\float.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\float\float.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\algorithms\algorithmic.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\algorithms\algorithmic.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\amssymb.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphicx.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\graphics.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics\trig.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\graphics-cfg\graphics.cfg
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\caption\subcaption.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\caption\subcaption.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\caption\caption.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\caption\caption.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\caption\caption3.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\caption\caption3.sty
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1ptm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT C:\Program Files\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.aux
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.aux
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.aux
+OUTPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.aux
+INPUT C:\Program Files\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
+INPUT C:\Program Files\MiKTeX\tex\latex\epstopdf-pkg\epstopdf-base.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\epstopdf-pkg\epstopdf-base.sty
+INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT C:\Program Files\MiKTeX\tex\latex\00miktex\epstopdf-sys.cfg
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+OUTPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.pdf
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+OUTPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmrc7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\umsa.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam5.tfm
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\amsfonts\umsb.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmbx7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmbx5.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmmib10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmmib7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmmib5.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmbsy10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmbsy7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmbsy5.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmrc7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvb.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8r.tfm
+INPUT C:\Users\jar\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
+INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\base\8r.enc
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmrc7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmb7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmrc7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmr9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmr6.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmmi9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmmi6.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmsy9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmsy6.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmbx9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmbx6.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmmib9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmmib6.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmbsy9.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmbsy6.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmrc7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmrc7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ts1ptm.fd
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ts1ptm.fd
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ts1ptm.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmr8c.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmr8c.vf
+INPUT .\images\1a.paralell.original.0.pdf
+INPUT .\images\1a.paralell.original.0.pdf
+INPUT .\images\1a.paralell.original.0.pdf
+INPUT .\images\1a.paralell.original.0.pdf
+INPUT .\images\1a.paralell.original.0.pdf
+INPUT .\images\1a.paralell.original.0.pdf
+INPUT .\images\1b.paralell.linearised.0.pdf
+INPUT .\images\1b.paralell.linearised.0.pdf
+INPUT .\images\1b.paralell.linearised.0.pdf
+INPUT .\images\1b.paralell.linearised.0.pdf
+INPUT .\images\1b.paralell.linearised.0.pdf
+INPUT .\images\1b.paralell.linearised.0.pdf
+INPUT .\images\1c.paralell.linearised.representative.0.pdf
+INPUT .\images\1c.paralell.linearised.representative.0.pdf
+INPUT .\images\1c.paralell.linearised.representative.0.pdf
+INPUT .\images\1c.paralell.linearised.representative.0.pdf
+INPUT .\images\1c.paralell.linearised.representative.0.pdf
+INPUT .\images\1c.paralell.linearised.representative.0.pdf
+INPUT .\images\2a.paralell.original.pdf
+INPUT .\images\2a.paralell.original.pdf
+INPUT .\images\2a.paralell.original.pdf
+INPUT .\images\2a.paralell.original.pdf
+INPUT .\images\2a.paralell.original.pdf
+INPUT .\images\2a.paralell.original.pdf
+INPUT .\images\2b.paralell.linearised.representative.0.pdf
+INPUT .\images\2b.paralell.linearised.representative.0.pdf
+INPUT .\images\2b.paralell.linearised.representative.0.pdf
+INPUT .\images\2b.paralell.linearised.representative.0.pdf
+INPUT .\images\2b.paralell.linearised.representative.0.pdf
+INPUT .\images\2b.paralell.linearised.representative.0.pdf
+INPUT .\images\2b.paralell.linearised.representative.1.pdf
+INPUT .\images\2b.paralell.linearised.representative.1.pdf
+INPUT .\images\2b.paralell.linearised.representative.1.pdf
+INPUT .\images\2b.paralell.linearised.representative.1.pdf
+INPUT .\images\2b.paralell.linearised.representative.1.pdf
+INPUT .\images\2b.paralell.linearised.representative.1.pdf
+INPUT .\images\2c.paralell.linearised.representative.pdf
+INPUT .\images\2c.paralell.linearised.representative.pdf
+INPUT .\images\2c.paralell.linearised.representative.pdf
+INPUT .\images\2c.paralell.linearised.representative.pdf
+INPUT .\images\2c.paralell.linearised.representative.pdf
+INPUT .\images\2c.paralell.linearised.representative.pdf
+INPUT .\images\2d.paralell.linearised.representative.pdf
+INPUT .\images\2d.paralell.linearised.representative.pdf
+INPUT .\images\2d.paralell.linearised.representative.pdf
+INPUT .\images\2d.paralell.linearised.representative.pdf
+INPUT .\images\2d.paralell.linearised.representative.pdf
+INPUT .\images\2d.paralell.linearised.representative.pdf
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.bbl
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.bbl
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.bbl
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\times\ptmri7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\times\ptmri8r.tfm
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1pcr.fd
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1pcr.fd
+INPUT C:\Users\jar\AppData\Roaming\MiKTeX\tex\latex\psnfss\ot1pcr.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr7t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\courier\pcrr7t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\courier\pcrr8r.tfm
+INPUT .\images\appendix\2a.broken.s_curve.original.pdf
+INPUT .\images\appendix\2a.broken.s_curve.original.pdf
+INPUT .\images\appendix\2a.broken.s_curve.original.pdf
+INPUT .\images\appendix\2a.broken.s_curve.original.pdf
+INPUT .\images\appendix\2a.broken.s_curve.original.pdf
+INPUT .\images\appendix\2a.broken.s_curve.original.pdf
+INPUT .\images\appendix\2a.parallel.swiss.original.pdf
+INPUT .\images\appendix\2a.parallel.swiss.original.pdf
+INPUT .\images\appendix\2a.parallel.swiss.original.pdf
+INPUT .\images\appendix\2a.parallel.swiss.original.pdf
+INPUT .\images\appendix\2a.parallel.swiss.original.pdf
+INPUT .\images\appendix\2a.parallel.swiss.original.pdf
+INPUT .\images\appendix\2a.two.swiss.original.pdf
+INPUT .\images\appendix\2a.two.swiss.original.pdf
+INPUT .\images\appendix\2a.two.swiss.original.pdf
+INPUT .\images\appendix\2a.two.swiss.original.pdf
+INPUT .\images\appendix\2a.two.swiss.original.pdf
+INPUT .\images\appendix\2a.two.swiss.original.pdf
+INPUT .\images\appendix\2a.four.moons.original.pdf
+INPUT .\images\appendix\2a.four.moons.original.pdf
+INPUT .\images\appendix\2a.four.moons.original.pdf
+INPUT .\images\appendix\2a.four.moons.original.pdf
+INPUT .\images\appendix\2a.four.moons.original.pdf
+INPUT .\images\appendix\2a.four.moons.original.pdf
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.aux
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+INPUT c:\Users\jar\OneDrive-UL\IST\5th_year\52_Dissertation\iclr2026\out\iclr2026_conference.out
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmbx10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmex10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmib10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmmib10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cmextra\cmmib5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cmextra\cmmib5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cmextra\cmmib7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cmextra\cmmib7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr6.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr6.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmr7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy5.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm7.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\courier\ucrr8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\courier\ucrr8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\helvetic\uhvb8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\helvetic\uhvb8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmb8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmb8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmr8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmr8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmri8a.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\urw\times\utmri8a.pfb

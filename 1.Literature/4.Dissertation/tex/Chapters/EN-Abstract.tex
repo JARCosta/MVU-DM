@@ -1,0 +1,14 @@
+% #############################################################################
+% Abstract Text
+% !TEX root = ../main.tex
+% #############################################################################
+% reset acronyms
+\acresetall
+
+\noindent Dimensionality reduction is a fundamental problem in machine learning and data analysis, particularly when dealing with high-dimensional data that often lies on lower-dimensional manifolds. While linear methods such as \ac{PCA} are widely used, they fail to capture the complex nonlinear relationships present in many real-world datasets. \ac{MVU} is a well-established semidefinite programming-based approach for nonlinear dimensionality reduction that preserves local isometric properties by maintaining neighborhood distances.
+
+\noindent However, \ac{MVU} faces significant computational limitations with large datasets and struggles when data lie on multiple disconnected manifolds—where natural clustering or sampling irregularities create disjoint components in the neighborhood graph. These disconnections render standard \ac{MVU} infeasible, as the resulting optimization problem becomes computationally intractable or fails to converge.
+
+\noindent This thesis presents \ac{MVU-DM}, a novel extension that addresses these limitations. The proposed method first identifies disjoint components within the dataset using neighborhood graph analysis, then independently applies \ac{MVU} to each component to obtain local embeddings. The key innovation lies in the global stage, where representative points from each component are selected and inter-component connections are established to create a global embedding that preserves the intrinsic structure of individual manifolds. This decomposition enables parallel processing and makes \ac{MVU} applicable to larger datasets that were previously computationally infeasible.
+
+\noindent Extensive experimental evaluation on both artificial datasets and natural datasets demonstrates that \ac{MVU-DM}, as the standard \ac{MVU}, outperform related methods. Furthermore, the results show that the extension not only handles disconnected manifolds effectively but also improves the quality of embeddings by processing each component independently, leading to better preservation of local geometric structures. This work establishes \ac{MVU-DM} as a practical and scalable solution for nonlinear dimensionality reduction in scenarios involving multiple disjoint manifolds.

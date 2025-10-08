@@ -1,0 +1,12 @@
+{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {4.1}{\ignorespaces Linearization of a single component}}{\reset@font\mlffont 27}{figure.caption.29}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(a)}{\ignorespaces {Original component in $\mathbb {R}^3$}}}{\reset@font\mlfSfont 27}{figure.caption.29}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(b)}{\ignorespaces {Linearized component in $\mathbb {R}^2$}}}{\reset@font\mlfSfont 27}{figure.caption.29}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(c)}{\ignorespaces {Representative component}}}{\reset@font\mlfSfont 27}{figure.caption.29}}
+{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {4.2}{\ignorespaces Linearization and representative points computation}}{\reset@font\mlffont 28}{figure.caption.30}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(a)}{\ignorespaces {Original dataset in $\mathbb {R}^3$}}}{\reset@font\mlfSfont 28}{figure.caption.30}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(b)}{\ignorespaces {First component linearization}}}{\reset@font\mlfSfont 28}{figure.caption.30}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(c)}{\ignorespaces {Second component linearization}}}{\reset@font\mlfSfont 28}{figure.caption.30}}
+{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {4.3}{\ignorespaces Linearization the global structure and final embedding}}{\reset@font\mlffont 29}{figure.caption.31}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(a)}{\ignorespaces {Global representation of a component}}}{\reset@font\mlfSfont 29}{figure.caption.31}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(b)}{\ignorespaces {Global dataset linearized}}}{\reset@font\mlfSfont 29}{figure.caption.31}}
+{\reset@font\mlfSfont\mtc@string\contentsline{subfigure}{\noexpand \leavevmode \numberline {(c)}{\ignorespaces {Final dataset}}}{\reset@font\mlfSfont 29}{figure.caption.31}}

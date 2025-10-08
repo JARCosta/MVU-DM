@@ -1,0 +1,35 @@
+\section{Introduction}
+% Esta cena é fixe porque é bue util, olha estas utilidades todas, mas tem uns problemas, que são estes ___, este estudo procura expandir a usabilidade desta mega ferramenta
+
+
+%% This thing is important (DR)
+Dimensionality reduction is a vast research field whose premise is to reduce the dimensionality of a dataset in some way that approximates the number of variables used to its intrinsic dimensionality.
+
+%% And these methods (PCA, MDS) don't work well, so there are these methods (___), but the (global ones) are not the greatest when we need local properties.
+Acknowledging that there is the possibility for points to be related in non-linear ways, common approaches that deal with linear relations, like Principal Component Analysis (PCA) \cite{pca} and Multidimensional Scaling (MDS), do not perform well over them. To accurately perform non-linear dimensional reduction (NLDR) it is necessary to consider non-linear methods, which can be classified into neighbourhood graph (NG)-based and global (e.g., PCA, autoencoders \cite{autoencoder, autoencoder-book}) methods. The latter do not achieve competitive results when local properties are important to maintain, while methods that make use of NGs allow for control over geometric properties of the data when performing dimensionality reduction.
+
+%% To fix that, Here are some general development about this that has already been made.
+
+
+%% This is the main problem why it fails (Disjoint components).
+%Moreover, the subfield of non-linear dimensional reduction (NLDR) is lacking adequate tools to perform successfully over many key scenarios, being the disconnection between clusters of points a common deficiency for many methods.
+While NLDR methods based on neighbourhood graphs (NG-NLDR) are the most adequate for finding representations that preserve geometric properties of the data, they are not easily applicable in the common scenarios where data lie on multiple manifolds or are sampled sparsely from the underlying manifold. In these cases, since we usually connect each point to its $k$-nearest neighbours, the formed NG may consist of multiple connected components. For example, if we imagine two clusters of points that are very distant from each other, it might take a large value of $k$ for them to become connected. However, as we will see, large values of $k$ (i.e., considering large neighbourhoods around each point) reduces NG-NLDR methods' ability to focus on local geometric properties. On the other hand, disconnected NGs result in NG-NLDR procedures that are ill-defined or yield bad results.
+
+%% This is how it fails:
+%The methods that most suffer from disjoint datasets are graph based NLDR methods. These, by computing each point's reduced position by analysing each one's neighbourhood, struggle on locations where the dataset is sparse, and thus each point's neighbourhood is hard to analyse. 
+%From a more general view, the most common cause is the separation between classes, where there is little data to connect them, thus creating a clear separation between different groups of points.
+
+%% Other attempts at fixing the fail:
+To respond to this, there is a present need for methods to be robust to datasets of varying density. In \cite{inspiration, general-landmark, modern} are discussed some implementations to fix this problem, from creating connections between disjoint components whenever they are not connected, or reducing a component's points into a single reference one, to then, after NLDR, rebuild the entire dataset from these reference points.
+
+
+%% Our approach to fixing the fail
+
+In this study we propose an extension to a valuable dimensionality reduction method, maximum variance unfolding (MVU), in order to address its inapplicability to the common setting of disconnected NGs. We reiterate that these emerge when the data lie on multiple manifolds or when certain regions of the manifold are more sparsely sampled, both of which occur naturally in real datasets.
+
+%% This paper is about...:
+First, we are describing the process of dimensionality reduction, presenting different methods dedicated to different purposes and also explaining their reasoning.
+
+More specifically, how some linear methods, with some tweaking, can solve non-linear datasets; some non-linear methods can reach good results, but others that reach more precise solutions are limited in their usability on natural data. With the presence of class separation, many methods, mainly graph-based, can't perform well due to the sparsity over areas of lower point density.
+
+After that, we analyse how there are some extensions to the methods that simplify the input data by a smaller dataset and still can perform as well. We also present some extensions that adapt to sparse areas, but on some related methods other them MVU.

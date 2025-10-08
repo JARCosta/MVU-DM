@@ -1,0 +1,56 @@
+\chapter{Appendix}
+\label{chapter:appendix}
+
+\section{Convex MVU}\label{app:convex-mvu}
+The convex version of MVU is derived from the original formulation:
+
+\begin{align}
+\max_{\boldsymbol{y}_{1},\dotsc,\boldsymbol{y}_{N}} \quad & \sum_{i=1}^{N}\|\boldsymbol{y}_{i}\|_{2}^{2}\\
+\textrm{s.t.} \quad & \|\boldsymbol{y}_{i}-\boldsymbol{y}_{j}\|_{2}^{2}=\|\boldsymbol{x}_{i}-\boldsymbol{x}_{j}\|_{2}^{2},\quad i\sim j\label{eq-app:mvu-isometry-orig}\\
+\quad & \sum_{i=1}^{N}\boldsymbol{y}_{i}=\boldsymbol{0}\label{eq-app:mvu-zerocenter}.
+\end{align}
+
+Expanding the squared terms:
+
+\begin{align}
+\max_{\boldsymbol{y}_{1},\dotsc,\boldsymbol{y}_{n}} \quad & \sum_{i=1}^{n}\boldsymbol{y}_{i}^{\top}\boldsymbol{y}_{i}\\
+\textrm{s.t.} \quad & \boldsymbol{y}_{i}^{\top}\boldsymbol{y}_{i} - 2 \boldsymbol{y}_{i}^{\top}\boldsymbol{y}_{j} + \boldsymbol{y}_{j}^{\top}\boldsymbol{y}_{j} =\|\boldsymbol{x}_{i}-\boldsymbol{x}_{j}\|_{2}^{2},\quad i\sim j\\
+\quad & \sum_{i,j=1}^{n}\boldsymbol{y}_{i}^{\top}\boldsymbol{y}_{j}=0
+\end{align}
+
+Collecting the embedded points into the matrix $\boldsymbol{Y} \in \mathbb{R}^{n \times d}$, the problem can be rewritten as:
+\begin{align}
+\max_{\boldsymbol{Y}} \quad & \text{tr}(\boldsymbol{Y}^{\top}\boldsymbol{Y})\\
+\textrm{s.t.} \quad & \boldsymbol{e}_{i}^{\top}\boldsymbol{Y}^{\top}\boldsymbol{Y}\boldsymbol{e}_{i} - 2 \boldsymbol{e}_{i}^{\top}\boldsymbol{Y}^{\top}\boldsymbol{Y}\boldsymbol{e}_{j} + \boldsymbol{e}_{j}^{\top}\boldsymbol{Y}^{\top}\boldsymbol{Y}\boldsymbol{e}_{j} =\|\boldsymbol{x}_{i}-\boldsymbol{x}_{j}\|_{2}^{2},\quad i\sim j\\
+\quad & \boldsymbol{1}^{\top}\boldsymbol{Y}^{\top}\boldsymbol{Y}\boldsymbol{1} = 0,
+\end{align}
+where $\boldsymbol{e}_i$ is a "selection" or "one-hot" vector, i.e., its elements are all zero except for the element at the $i$-th index, which is $1$. Note that, now, the whole problem depends on $\boldsymbol{Y}^\top\boldsymbol{Y}$, so we introduce a new variable $\boldsymbol{K}=\boldsymbol{Y}^{\top}\boldsymbol{Y}\in\mathbb{R}^{N\times N}$ to linearize the terms that depend on $\boldsymbol{Y}^\top\boldsymbol{Y}$:
+
+\begin{align}
+\max_{\boldsymbol{K},\boldsymbol{Y}} \quad & \text{tr}(\boldsymbol{K})\\
+\textrm{s.t.} \quad & \boldsymbol{e}_{i}^{\top}\boldsymbol{K}\boldsymbol{e}_{i} - 2 \boldsymbol{e}_{i}^{\top}\boldsymbol{K}\boldsymbol{e}_{j} + \boldsymbol{e}_{j}^{\top}\boldsymbol{K}\boldsymbol{e}_{j} =\|\boldsymbol{x}_{i}-\boldsymbol{x}_{j}\|_{2}^{2},\quad i\sim j\\
+\quad & \boldsymbol{1}^{\top}\boldsymbol{K}\boldsymbol{1} = 0\\
+\quad & \boldsymbol{K} = \boldsymbol{Y}^{\top}\boldsymbol{Y}
+\end{align}
+
+Because $\boldsymbol{K}=\boldsymbol{Y}^{\top}\boldsymbol{Y}$ defines an inner product matrix, we can replace that constraint if we make sure that $\boldsymbol{K}$ is both symmetric, positive semidefinite and that the rank of $\boldsymbol{K}$ is not greater than the dimension of the $\boldsymbol{y}_i$s:
+
+\begin{align}
+\max_{\boldsymbol{K}} \quad & \text{tr}(\boldsymbol{K})\\
+\textrm{s.t.} \quad & \boldsymbol{e}_{i}^{\top}\boldsymbol{K}\boldsymbol{e}_{i} - 2 \boldsymbol{e}_{i}^{\top}\boldsymbol{K}\boldsymbol{e}_{j} + \boldsymbol{e}_{j}^{\top}\boldsymbol{K}\boldsymbol{e}_{j} =\|\boldsymbol{x}_{i}-\boldsymbol{x}_{j}\|_{2}^{2},\quad i\sim j\\
+\quad & \boldsymbol{1}^{\top}\boldsymbol{K}\boldsymbol{1} = 0\\
+\quad & \boldsymbol{K}\succeq 0\\
+\quad & \text{rk}(\boldsymbol{K}) \leq n
+\end{align}
+
+Now, the only nonconvexity in the problem is given by the rank constraint. If we remove it, we arrive at a convex relaxation of the original problem, which is the final formulation of MVU:
+
+\begin{align}
+\max_{\boldsymbol{K}} \quad & \text{tr}(\boldsymbol{K})\\
+\textrm{s.t.} \quad & \boldsymbol{e}_{i}^{\top}\boldsymbol{K}\boldsymbol{e}_{i} - 2 \boldsymbol{e}_{i}^{\top}\boldsymbol{K}\boldsymbol{e}_{j} + \boldsymbol{e}_{j}^{\top}\boldsymbol{K}\boldsymbol{e}_{j} =\|\boldsymbol{x}_{i}-\boldsymbol{x}_{j}\|_{2}^{2},\quad i\sim j\\
+\quad & \boldsymbol{1}^{\top}\boldsymbol{G}\boldsymbol{1} = 0\\
+\quad & \boldsymbol{K}\succeq 0
+\end{align}
+
+Here, $\boldsymbol{K}\in\mathbb{R}^{N\times N}$ is a Gramian (or inner product) matrix, so that maximizing its trace corresponds to maximizing the variance of the data in the target space.
+

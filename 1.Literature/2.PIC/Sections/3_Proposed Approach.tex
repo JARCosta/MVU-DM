@@ -1,0 +1,159 @@
+\section{Proposed Approach}
+
+\subsection{Problem Specification}
+% MAIN SECTION: especificar com 0 ambiguidades que problema vamos resolver
+    As mentioned before, NG-based methods have big performance downgrades, or don't work at all, on datasets that present some separation between clusters or submanifolds; ending up not being capable of finding a solution in cases where a connection between submanifolds is non-existent.
+
+    Specifically for MVU, the problem originates from the fact that the constraints that take part in the optimisation problem are responsible for keeping the distances between points in its neighbourhood constant. In contrast, the overall optimisation function pulls every other point away. This results in an unbounded problem where MVU simply pulls the connected components further.
+    
+    In particular, while existing solutions have increased the applicability of other methods, they do not yet allow for the application of MVU to real-world data. Due to the stronger isometry properties of MVU and the fact that it usually outperforms other non-linear dimensionality reduction methods on artificial data \cite{comparison}, we wish to extend its applicability to real-world data.
+    
+\subsection{Solution Specification}
+
+    In this subsection, we describe the procedure of our proposed solution:
+
+    Consider a dataset of disjoint manifolds, where $\bm{S}_i \in \mathbb{R}^{n_i \times D}$ is the subset of points belonging to the connected component of index $i$, where $n_i$ is the number of points of the $i$'th disjoint component. %This can be calculated from a DFS or BFS algorithm.
+
+    For each connected component $\bm{S}_i$ we preform MVU over it, in order to achieve an embedded representation $\bm{Y}_i \in \mathbb{R}^{n_i \times d}$.
+    We now look for the subset $\bm{C}_i \in \mathbb{R}^{d+1 \times d}$ of $d+1$ points that are the furthest apart, which computationally would approximate to:
+    \begin{equation}
+        \max_{\bm{C}_i} \quad {\| \bm{c}_m - \bm{c}_n \|}^2, \forall{\bm{c}_m,\bm{c}_n} \in \bm{Y}_i.
+    \end{equation}
+    Additionally, we look for the points that are closest to each of the other connected component, forming the subset $\bm{L}\in \mathbb{R}^{l-1\times d}$, where l is the number of disjoint components:
+    \begin{equation}
+        \min_{\bm{L}_i} \quad {\| \bm{L}_{im} - \bm{L}_{jn} \|}^2, \forall \bm{L}_{im} \in \bm{Y}_{i} \wedge \bm{L}_{jn} \in \bm{Y}_{j}
+    \end{equation}
+
+    After performing MVU over each individual connected component, it is possibler to achieve embedded spaces with different sizes, thus it is necessary components to have the same dimensionality, adding variables of value $0$ until they equalise. 
+
+    From each of the subsets $\bm{C}_i$ and $\bm{L}_i$ we now build a dataset of points from all the disjoint components, and preform MVU over it, now. It is important that the connection matrix of this formulation describes connections between all inner-component points, and the connections inter-component with the closest point between them:
+    \begin{align}
+        \max_{\bm{Y}} \quad & \sum_{ij} {\| \bm{y}_i - \bm{y}_j \|}^2 \\
+        \textrm{s.t.} \quad 
+            & \sum_i \bm{y}_i = 0 \\
+            & {\| \bm{y}_i - \bm{y}_j \|}^2 = {\| \bm{C}_{im} - \bm{C}_{jn} \|}^2, \forall{C}_{im} \in\bm{C}_i \wedge  {C}_{jn} \in\bm{C}_j \\
+            & {\| \bm{y}_i - \bm{y}_j \|}^2 = {\| \bm{L}_{im} - \bm{L}_{jn} \|}^2.
+    \end{align}
+    Due to MVU's constraint of keeping connected point' distances untouched, it is the possible to position each manifold in its place based on the reference points used to preform the inner-component reduction.
+
+
+    \iffalse
+    \begin{itemize}
+        \item Preform a BFS or DFS search to compute the group of points forming the different submanifolds:
+        \item Consider $i$ an index of each group of points forming a submanifold:\begin{itemize}
+                \item Compute the shortest link from any point in the submanifold, to any point in \textcolor{red}{the closest manifold} 
+                
+                \item Preform MVU over each connected submanifold, reaching an embedded submanifold in $d_i$ dimensions.
+                \item Find the $d+1$ furthest points
+                \item Summarise each submanifold in a subset of points containing the $d+1$ furthest points and \textcolor{red}{all the points necessary for the inter-submanifold connections}.
+            \end{itemize}
+        \item Preform a basis equaliser, making all subset of submanifolds into d-dimensions. \textcolor{red}{yes they are all in $d$ dimensions, but are they the same $d$ dimensions?}
+        \item Merge all the points from the subsets of manifolds into one dataset.
+        \item Preform MVU over the newly created dataset.
+        \item \textcolor{red}{Reconstruct each submanifold from each reference points chosen before.}
+    \end{itemize}
+    \fi
+
+    
+
+    %Different solutions for this problem can be considered:
+    
+    % The simpler one would be to store the centre point of each submanifold and perform the dimensionality reduction separately. This approach could return different eigenbasis for each of the manifolds, possibly leading to a difficult situation when positioning the different manifolds on the same basis.
+    
+    % Another possible approach, as explored for related methods like isomap, is to analyse the impact that creating random connections between points in different submanifolds would imply.
+
+    % There is also the possibility of using a Neighbourhood graph with varying values of k depending on the density of the dataset in each particular location.
+    % Some approaches with a variable value of k have been explored, but I'm not sure if anyone has already used them to ensure the dataset is fully connected.    This approach can be compared to an approach where we form the neighbourhood graph following one certain function that is not knn.
+    
+\subsection{Methodology}
+% um paragrafo a explicar que o que vamos fazer nesta subsecção é descrever a metodologia para as experiências
+Along with the need to measure the success of each method modification, there will also be the need to compare those method modifications with the other presented methods. Given that they present different interpretations and approaches to lowering the dimension of a dataset, the comparison between them may not take the same approach as comparing different versions of the same method.
+With this said, below we present the various ways that we can compare the success of each method change:
+
+\subsubsection{Algorithms}
+% - enumerar os métodos que vamos testar
+% - explicar o porquê de os escolhermos
+% - explicar as configurações que vamos testar, i.e., para cada algoritmo dizer as combinações de hiperparâmetros (e.g., número de NNs) que vamos escolher nos testes (de forma a fazer uma comparação justa, porque algoritmos diferentes podem ser melhores ou piores para diferentes escolhas de hiperparâmetros)
+
+We will test all the algorithms described above as they are the most widely used and are representative dimensionality reduction methods. Furthermore, we will augment them with the enhanced neighbourhood graph as in \cite{inspiration} to compare them and analyse their performance over datasets with disjoint manifolds.
+
+% Due to its resemblance to MVU \cite{resemblance}, Isomap, LLE, LE, and K-PCA all appear to be valuable comparators with MVU. Aside from that, given the young success of t-SNE, although very focused on reducing dimensions to specific low values, it presents as a worthy competitor to MVU, along with LTSA and H-LLE.
+
+Given that most methods in analysis use some type of neighbourhood graph, the $k$ hyper-parameter can be considered a unifying variable which would offer comparable situations to the set of methods, making it easy to observe the impact that disjoint datasets present to each method. However, this parameter may not take a rather large range of values, and is highly dependent on the properties of each dataset. Thus, alike \cite{comparison}, we are going to test the different datasets with $k$ ranging from $3$ to 15. Relatively to the learning rate, in the case of t-SNE, we are going to explore values between 10 and 1000.
+
+
+\subsubsection{Datasets}
+% - enumerar os datasets que vamos usar
+% - explicar a relevância de cada dataset, i.e., porque é que interessa saber como é que os métodos se saem nesta tarefa
+% - descrever os datasets em detalhe, e.g., resolução de imagens, origem do dataset no caso de um dataset de imagens naturais, ou no caso de datasets artificiais detalhar a forma como o geraste (como feito naquela review)
+
+We will consider both artificial, which present unique challenges to the different algorithms, and natural datasets. To construct each artificial dataset, we consider the variables $p_i$ and $q_i$, uniformly distributed in the range $[0, 1]$. In artificial datasets, Gaussian noise with a small variance is added to all data points, as in \cite{comparison}.
+
+\paragraph{Swiss Roll}
+Addressing data that lies on a low-dimensional manifold that is isometric to Euclidean space, the Swiss Roll
+represents a manifold turning into itself.
+
+It can be built following simple computational operations leaving the possibility of some fine-tuning relating the density of points along the manifold. Being artificially built, the number of points can vary as we prefer, as can the density of points along the manifold.
+However, the number of dimensions is expected to remain as the typical Swiss roll dataset, 3.
+
+The Swiss Roll is thus formed of points $\bm{x}_i = [t_i \cos(t_i), t_i \sin(t_i), 30q_i]$ where $t_i = \frac{3\pi}{2}(1+2p_i)$.
+
+\paragraph{Broken Swiss Roll} presents an extension of the previous dataset, presenting the cases where the density of points in some locations reach null points, separating the continuous Swiss roll manifold into multiple disjoint components. This, is aimed to analyse data that lies on or near a disconnected manifold. The formulation of this dataset is also based on the previous, with the added clause of rejecting the points where $\frac{2}{5} < t_i < \frac{4}{5}$, resulting in two disjoint components.
+
+\paragraph{Helix} representing a closed coil in the span of a 3-dimensional space. Testing if each method handles data lying on a low-dimensional manifold that is not isometric to Euclidean space.
+
+The dataset is built following $\bm{x}_i = [(2 + \cos(8p_i)) \cos(p_i),(2 + \cos(8p_i)) \sin(p_i), \sin(8p_i)]$.
+
+\paragraph{Twinpeaks}
+the dataset is formulated from $\bm{x}_i = [1 - 2p_i, \sin(\pi - 2\pi p_i)), \tanh(3 - 6q_i)]$.
+This dataset also aims to evaluate data lying on a low-dimensional manifold that is
+not isometric to Euclidean space.
+
+\paragraph{High-Dimensional} dataset consists of points randomly sampled from a 5-dimensional manifold embedded in a 10-dimensional space.
+This, aims to test data forming a manifold with a high intrinsic dimensionality by computing ten different combinations of the five uniformly distributed random variables, some of which are linear and some of which are nonlinear.\\
+
+We now present the natural datasets to be used in our experiments:
+
+\paragraph{Teapots} a 400 76x101 pixel images dataset, in 3-byte colours, of the same teapot from a 360-degree range of rotation.
+
+\paragraph{MNIST} composed of up to 70000 20x20 pixel images of digits (0 through 9) written by hand, with a 256-bit grey scale.
+
+\paragraph{UMIST} is a dataset of 564 images of 20 individuals' faces from different angles and poses. Each image is 220 x 220 pixels with a 256-bit grey scale.
+
+It is expected that disconnections in neighbourhood graphs will happen either in regions of the data space between different digits and individuals, or in areas where the data is not well sampled.
+
+These tasks are relevant examples to evaluate if the methods are able to identify some relation between data with no extra information besides the data itself.
+
+\subsubsection{Metrics}
+We follow \cite{comparison} and evaluate dimensionality reduction methods according to three metrics that assess the quality of the embedded data:
+
+\paragraph{$1$-NN Classifier Error} \cite{1-nn} Calculates the ratio of points which, its closest neighbour is maintained from the original space throughout the reduction method.
+
+\paragraph{Trustworthiness} \cite{t&c} Considering that $r(i,j)$ represents the position of $j$ in the ranking of the closest point to $i$ in the original space, and $\bm{U}_i$ limits that search to $j$'s that are neighbour of $i$ in the lower-dimension space but not in the original space, the trustworthiness asserts whether the points in the $k$-neighbourhood of an embedded point are also neighbours to it in the original space:
+\begin{equation}
+    T(k) = 1 - \frac{2}{nk(2n-3k-1)} \sum_i \sum_{j\in U_i^{(k)}} (r(i,j) - k).
+\end{equation}
+
+\paragraph{Continuity} \cite{t&c} Analogously, continuity asserts whether the points in the $k$-neighbourhood of a point in the original space are still neighbours to it in the embedded space:
+\begin{equation}
+    C(k) = 1 - \frac{2}{nk(2n-3k-1)} \sum_i \sum_{j\in V_i^{(k)}} (\hat{r}(i,j) - k),
+\end{equation}
+where $\hat{r}(i,j)$ represents the ranking of points in the neighbourhood of $i$ in the embedded space, and $\bm{V}_i$ the set of points in the neighbourhood of $i$ in the original space but not in the embedded space.
+
+
+%In practice, with such big number of data points, it is hard for a method to comply perfectly with the nearest neighbour measure. Thus, the trustworthiness and continuity measures are built, basically weighing the difference of neighbours which stopped being neighbours and vice versa; data points, that should not have, ended up connecting in the reduced space. The formulas for the given metrics $C$ and $T$, for continuity and trustworthiness respectfully are:
+%\begin{equation}
+%    C(k) = 1 - \frac{2}{nk(2n-3k-1)} \sum_i \sum_{j\in V_i^{(k)}} (r(i,j) - k)
+%\end{equation}
+%\begin{equation}
+%    T(k) = 1 - \frac{2}{nk(2n-3k-1)} \sum_i \sum_{j\in U_i^{(k)}} (\hat{r}(i,j) - k)
+%\end{equation}
+%where $r(i,j)$ represents the rank of the high-dimensional point j according to the pairwise distance between the high-dimensional data points, while $\hat{r}(i,j)$ in respect of the low-dimension; $V_i^{(k)}$ represents the set of points that are among the k nearest neighbours of $i$ on high the high dimension but not in the low dimension, and $U_i^{(k)}$ represents the same set but in the oppose order.
+
+\subsubsection{Experimental Setup}
+All algorithms and experiments described in this section shall be implemented in Python 3.12.5 \cite{python}, resorting to numerical (e.g., NumPy \cite{numpy}), scientific (e.g., SciPy \cite{scipy}), and optimization (e.g., CvxPy \cite{cvxpy,cvxpy-upgrade}) libraries whenever necessary.
+
+Whenever possible, we will test our implementations of the relevant algorithms against existing publicly available ones, such as those in Scikit-Learn's \cite{scikit-learn} manifold learning package.
+
+Finally, all experiments will run on GAIPS's Nexus and ADA1 servers.
+
